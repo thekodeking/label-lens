@@ -1,0 +1,27 @@
+[project]
+name = "label-lens"
+version = "0.1.0"
+description = "Evidence-first packaged food label explorer"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "python-dotenv>=1.0,<2",
+    "uvicorn[standard]>=0.34,<1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=8,<9",
+    "ruff>=0.11,<1",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
