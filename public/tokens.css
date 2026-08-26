@@ -1,37 +1,60 @@
-/* Hallmark · theme: custom Saffron Ledger · paper-band: light · display-style: high-contrast-serif · accent-hue: warm-coral */
+/* Hallmark · theme: Orchard (custom) · paper-band: light · display-style: grotesk-sans · accent-hue: botanical-green
+ * macrostructure: Marquee Hero · nav: N2 chip · footer: minimal
+ * display Space Grotesk · body Inter · data IBM Plex Mono */
 :root {
-  --color-paper: oklch(96% 0.018 84);
-  --color-paper-2: oklch(99% 0.01 84);
-  --color-accent-soft: oklch(91% 0.055 48);
-  --color-rule: oklch(83% 0.018 70);
-  --color-muted: oklch(49% 0.018 55);
-  --color-ink-2: oklch(38% 0.028 44);
-  --color-ink: oklch(20% 0.035 38);
-  --color-accent: oklch(67% 0.18 42);
-  --color-accent-ink: oklch(20% 0.035 38);
-  --color-focus: oklch(51% 0.16 42);
-  --color-overlay: oklch(12% 0.02 84 / 65%);
-  --font-display: 'Geist', 'Inter Tight', Arial, sans-serif;
-  --font-wordmark: 'Geist', Arial, sans-serif;
-  --font-body: 'Inter Tight', 'IBM Plex Sans', Arial, sans-serif;
-  --font-mono: 'IBM Plex Mono', Consolas, monospace;
-  --space-2xs: .5rem;
-  --space-xs: .75rem;
-  --space-sm: 1rem;
-  --space-md: 1.5rem;
-  --space-lg: 2rem;
-  --space-xl: 3rem;
-  --space-2xl: 4.5rem;
-  --space-3xl: 7rem;
-  --text-xs: .75rem;
-  --text-sm: .875rem;
-  --text-base: 1rem;
-  --text-md: 1.15rem;
-  --text-lg: 1.35rem;
-  --text-xl: 2rem;
-  --ease-out: cubic-bezier(.16, 1, .3, 1);
-  --dur-short: 180ms;
-  --dur-mid: 260ms;
-  --rule-hairline: 1px;
-  --radius-pill: 999px;
+  /* surfaces — warm neutral paper */
+  --color-paper: oklch(98% 0.006 100);
+  --color-paper-2: oklch(100% 0 0);
+  --color-panel: oklch(96% 0.009 120);
+  --color-ink: oklch(24% 0.02 155);
+  --color-ink-2: oklch(45% 0.02 155);
+  --color-muted: oklch(57% 0.015 150);
+  --color-rule: oklch(90% 0.012 135);
+  --color-ink-inv: oklch(98% 0.006 100);
+
+  /* brand — deep botanical green */
+  --color-accent: oklch(50% 0.12 156);
+  --color-accent-ink: oklch(99% 0.02 156);
+  --color-accent-soft: oklch(93% 0.05 152);
+  --color-accent-tint: oklch(50% 0.12 156 / 16%);
+
+  /* functional signals */
+  --color-warn: oklch(57% 0.2 27);          /* red — flags / alerts */
+  --color-warn-soft: oklch(94% 0.05 27);
+  --color-warn-tint: oklch(57% 0.2 27 / 18%);
+  --color-sugar: oklch(77% 0.15 70);        /* amber — the sugar reveal */
+  --color-sugar-soft: oklch(95% 0.045 72);
+  --color-good: oklch(62% 0.15 145);        /* brighter green — clear */
+
+  /* deep result card — green-ink */
+  --color-shade: oklch(26% 0.04 162);
+  --color-glass: oklch(100% 0 0 / 8%);
+  --color-glass-2: oklch(100% 0 0 / 15%);
+  --color-on-shade: oklch(97% 0.008 120);
+  --color-on-shade-mut: oklch(76% 0.02 140);
+
+  --color-focus: oklch(50% 0.12 156);
+  --color-overlay: oklch(24% 0.03 160 / 60%);
+
+  /* type roles */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+
+  /* spacing (4pt) */
+  --space-2xs: .5rem; --space-xs: .75rem; --space-sm: 1rem; --space-md: 1.5rem;
+  --space-lg: 2rem; --space-xl: 3rem; --space-2xl: 4.5rem; --space-3xl: 7rem;
+
+  /* type scale */
+  --text-xs: .75rem; --text-sm: .875rem; --text-base: 1rem; --text-md: 1.15rem;
+  --text-lg: 1.4rem; --text-xl: 2rem; --text-display-s: 3rem;
+  --text-display: clamp(3rem, 12vw, 5.4rem);
+
+  --ease-out: cubic-bezier(.16,1,.3,1);
+  --ease-in: cubic-bezier(.4,0,1,1);
+  --ease-in-out: cubic-bezier(.65,0,.35,1);
+  --dur-short: 160ms; --dur-mid: 260ms; --dur-long: 480ms;
+
+  --rule-hairline: 1px; --rule-heavy: 2px;
+  --radius-sm: 8px; --radius-md: 14px; --radius-lg: 22px; --radius-pill: 999px;
 }
