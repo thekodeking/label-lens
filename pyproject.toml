@@ -5,6 +5,7 @@ description = "Evidence-first packaged food label explorer"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115,<1",
+    "loguru>=0.7,<1",
     "python-dotenv>=1.0,<2",
     "uvicorn[standard]>=0.34,<1",
 ]

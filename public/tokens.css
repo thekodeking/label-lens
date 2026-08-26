@@ -1,44 +1,45 @@
-/* Hallmark · theme: Orchard (custom) · paper-band: light · display-style: grotesk-sans · accent-hue: botanical-green
+/* Hallmark · theme: Graphite (custom, monochromatic) · paper-band: light · display-style: mono · accent-hue: neutral
  * macrostructure: Marquee Hero · nav: N2 chip · footer: minimal
- * display Space Grotesk · body Inter · data IBM Plex Mono */
+ * mono-led type — display IBM Plex Mono · body IBM Plex Sans · data IBM Plex Mono
+ * signals carried by lightness + weight, not hue */
 :root {
-  /* surfaces — warm neutral paper */
-  --color-paper: oklch(98% 0.006 100);
+  /* surfaces — neutral paper */
+  --color-paper: oklch(98.5% 0 0);
   --color-paper-2: oklch(100% 0 0);
-  --color-panel: oklch(96% 0.009 120);
-  --color-ink: oklch(24% 0.02 155);
-  --color-ink-2: oklch(45% 0.02 155);
-  --color-muted: oklch(57% 0.015 150);
-  --color-rule: oklch(90% 0.012 135);
-  --color-ink-inv: oklch(98% 0.006 100);
+  --color-panel: oklch(96% 0 0);
+  --color-ink: oklch(20% 0 0);
+  --color-ink-2: oklch(40% 0 0);
+  --color-muted: oklch(58% 0 0);
+  --color-rule: oklch(89% 0 0);
+  --color-ink-inv: oklch(98.5% 0 0);
 
-  /* brand — deep botanical green */
-  --color-accent: oklch(50% 0.12 156);
-  --color-accent-ink: oklch(99% 0.02 156);
-  --color-accent-soft: oklch(93% 0.05 152);
-  --color-accent-tint: oklch(50% 0.12 156 / 16%);
+  /* brand — ink itself (monochrome, no chroma) */
+  --color-accent: oklch(22% 0 0);
+  --color-accent-ink: oklch(99% 0 0);
+  --color-accent-soft: oklch(93% 0 0);
+  --color-accent-tint: oklch(22% 0 0 / 12%);
 
-  /* functional signals */
-  --color-warn: oklch(57% 0.2 27);          /* red — flags / alerts */
-  --color-warn-soft: oklch(94% 0.05 27);
-  --color-warn-tint: oklch(57% 0.2 27 / 18%);
-  --color-sugar: oklch(77% 0.15 70);        /* amber — the sugar reveal */
-  --color-sugar-soft: oklch(95% 0.045 72);
-  --color-good: oklch(62% 0.15 145);        /* brighter green — clear */
+  /* functional signals — differentiated by darkness, not colour */
+  --color-warn: oklch(28% 0 0);            /* high concern — heavy ink block */
+  --color-warn-soft: oklch(94.5% 0 0);
+  --color-warn-tint: oklch(28% 0 0 / 12%);
+  --color-sugar: oklch(72% 0 0);           /* the sugar reveal — light-mid grey, reads on both bands */
+  --color-sugar-soft: oklch(94% 0 0);
+  --color-good: oklch(45% 0 0);            /* clear — medium ink */
 
-  /* deep result card — green-ink */
-  --color-shade: oklch(26% 0.04 162);
+  /* deep result card — near-black */
+  --color-shade: oklch(18% 0 0);
   --color-glass: oklch(100% 0 0 / 8%);
-  --color-glass-2: oklch(100% 0 0 / 15%);
-  --color-on-shade: oklch(97% 0.008 120);
-  --color-on-shade-mut: oklch(76% 0.02 140);
+  --color-glass-2: oklch(100% 0 0 / 16%);
+  --color-on-shade: oklch(97% 0 0);
+  --color-on-shade-mut: oklch(70% 0 0);
 
-  --color-focus: oklch(50% 0.12 156);
-  --color-overlay: oklch(24% 0.03 160 / 60%);
+  --color-focus: oklch(22% 0 0);
+  --color-overlay: oklch(18% 0 0 / 62%);
 
-  /* type roles */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, 'Segoe UI', sans-serif;
+  /* type roles — mono-led */
+  --font-display: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  --font-body: 'IBM Plex Sans', system-ui, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
 
   /* spacing (4pt) */
@@ -48,7 +49,7 @@
   /* type scale */
   --text-xs: .75rem; --text-sm: .875rem; --text-base: 1rem; --text-md: 1.15rem;
   --text-lg: 1.4rem; --text-xl: 2rem; --text-display-s: 3rem;
-  --text-display: clamp(3rem, 12vw, 5.4rem);
+  --text-display: clamp(2.5rem, 10vw, 4.6rem);
 
   --ease-out: cubic-bezier(.16,1,.3,1);
   --ease-in: cubic-bezier(.4,0,1,1);

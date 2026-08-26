@@ -7,6 +7,7 @@ import logging
 import os
 import re
 import socket
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,12 +18,38 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi import Request as FastAPIRequest
 from fastapi.responses import FileResponse
+from loguru import logger as log
 
-logging.basicConfig(
-    level=os.getenv("LABEL_LENS_LOG_LEVEL", "INFO").upper(),
-    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+LOG_LEVEL = os.getenv("LABEL_LENS_LOG_LEVEL", "DEBUG").upper()
+log.remove()
+log.add(
+    sys.stderr,
+    level=LOG_LEVEL,
+    backtrace=True,
+    diagnose=True,
+    format=(
+        "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | "
+        "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+    ),
 )
-log = logging.getLogger("label_lens")
+
+
+# Route stdlib logging (uvicorn, fastapi, urllib) through loguru so everything
+# shares one verbose sink. ponytail: standard loguru intercept recipe.
+class _InterceptHandler(logging.Handler):
+    def emit(self, record: logging.LogRecord) -> None:
+        try:
+            level = log.level(record.levelname).name
+        except ValueError:
+            level = record.levelno
+        log.opt(depth=6, exception=record.exc_info).log(level, record.getMessage())
+
+
+logging.basicConfig(handlers=[_InterceptHandler()], level=0, force=True)
+for name in ("uvicorn", "uvicorn.error", "uvicorn.access", "fastapi"):
+    lg = logging.getLogger(name)
+    lg.handlers = [_InterceptHandler()]
+    lg.propagate = False
 
 app = FastAPI(title="Label Lens", docs_url=None, redoc_url=None)
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -35,11 +62,11 @@ async def log_requests(request: FastAPIRequest, call_next):
         response = await call_next(request)
     except Exception:
         elapsed = (time.perf_counter() - start) * 1000
-        log.exception("%s %s -> 500 (%.0fms)", request.method, request.url.path, elapsed)
+        log.exception("{} {} -> 500 ({:.0f}ms)", request.method, request.url.path, elapsed)
         raise
     elapsed = (time.perf_counter() - start) * 1000
-    level = logging.WARNING if response.status_code >= 500 else logging.INFO
-    log.log(level, "%s %s -> %s (%.0fms)", request.method, request.url.path,
+    level = "WARNING" if response.status_code >= 500 else "INFO"
+    log.log(level, "{} {} -> {} ({:.0f}ms)", request.method, request.url.path,
             response.status_code, elapsed)
     return response
 
@@ -50,21 +77,40 @@ MAX_SCAN_BYTES = 8 * 1024 * 1024
 # public launch needs. It's weaker at clean JSON, so _ocr_label's plain-prompt
 # fallback does more work. Override the exact id from AI Studio via env if it
 # differs. Must be a MULTIMODAL Gemma variant (accepts image input).
-FREE_OCR_MODEL = "gemma-4-31b-it"  # 30 RPM / 16K TPM / 14.4K RPD (26B id: gemma-4-26b-it)
+FREE_OCR_MODEL = "gemma-4-31b-it"  # 30 RPM / 16K TPM / 14.4K RPD (26B id: gemma-4-26b-a4b-it)
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
 
 
 load_dotenv(BASE_DIR / ".env")
-# Ordered fallback chain. Each model has its own free daily budget, so chaining
-# them multiplies the effective RPD (31B → 26B → …). Override with a comma list.
+# Ordered fallback chain: try the stronger Gemini flash models first (better JSON,
+# faster), then fall to the higher-limit Gemma models for volume once flash's small
+# free budget 429s. Each model has its own free daily budget, so chaining multiplies
+# the effective RPD. A runtime 429 rolls to the next id. Override with a comma list.
 OCR_MODELS = [
     m.strip()
     for m in os.getenv(
         "LABEL_LENS_OCR_MODELS",
-        os.getenv("LABEL_LENS_OCR_MODEL", "gemma-4-31b-it,gemma-4-26b-it"),
+        os.getenv(
+            # gemini-2.5-flash is fast + reliable (verified ~1.7s), then Gemma for
+            # daily volume. The newest 3.7/3.6-flash are currently 503 "high demand"
+            # (~70s hangs) — add them back via LABEL_LENS_OCR_MODELS once that eases.
+            "LABEL_LENS_OCR_MODEL",
+            "gemini-2.5-flash,gemma-4-31b-it,gemma-4-26b-a4b-it",
+        ),
     ).split(",")
     if m.strip()
 ] or [FREE_OCR_MODEL]
+
+
+# Thinking stays ON by default: with reasoning_effort=none the flash models hung
+# to the 90s timeout on a small image. Set OCR_DISABLE_THINKING=1 to try turning
+# it off again (only affects gemini flash; Gemma has no thinking mode).
+OCR_DISABLE_THINKING = os.getenv("OCR_DISABLE_THINKING", "0") == "1"
+
+
+def _thinking_off(model: str) -> bool:
+    m = model.lower()
+    return OCR_DISABLE_THINKING and m.startswith("gemini") and "flash" in m
 
 # Global OCR rate gate. The free tier is a shared per-key limit, so the
 # constraint is global across all visitors, not per-user. This token bucket
@@ -77,7 +123,7 @@ _OCR_INTERVAL = 60.0 / OCR_RPM
 OCR_MAX_WAIT = float(os.getenv("OCR_MAX_WAIT", "100"))   # never hold a request longer than this
 OCR_MAX_QUEUE = int(os.getenv("OCR_MAX_QUEUE", "10"))    # reject once this many are already waiting
 OCR_DAILY_CAP = int(os.getenv("OCR_DAILY_CAP", "14000"))  # per model, under the 14.4k RPD
-OCR_HTTP_TIMEOUT = float(os.getenv("OCR_HTTP_TIMEOUT", "90"))  # Gemma is slow — was 45, timed out
+OCR_HTTP_TIMEOUT = float(os.getenv("OCR_HTTP_TIMEOUT", "45"))  # abort a hung/overloaded model and roll to the next
 _ocr_gate_lock = asyncio.Lock()
 _ocr_next_slot = 0.0
 _ocr_waiting = 0
@@ -87,6 +133,11 @@ _ocr_counts: dict[str, int] = {}
 
 class _RateLimited(Exception):
     """A model returned 429 at call time — mark it spent and fall through the chain."""
+
+
+class _Overloaded(Exception):
+    """A model is transiently unavailable (503 high-demand) or timed out — roll to
+    the next model for THIS request, but keep it in the chain for future scans."""
 
 
 def _roll_day() -> None:
@@ -133,7 +184,7 @@ async def _ocr_gate(exclude: set[str]) -> str:
         _ocr_counts[model] = _ocr_counts.get(model, 0) + 1  # count against this model's budget
     try:
         if wait > 0:
-            log.info("OCR queued: waiting %.1fs (%s ahead) on %s", wait, _ocr_waiting - 1, model)
+            log.info("OCR queued: waiting {:.1f}s ({} ahead) on {}", wait, _ocr_waiting - 1, model)
             await asyncio.sleep(wait)
     finally:
         async with _ocr_gate_lock:
@@ -233,6 +284,21 @@ def _normalize(p: dict) -> dict:
     p["sugar_g"] = filled("sugar_g", r"\bsugars?\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b")
     p["energy_kcal"] = filled("energy_kcal", r"\benergy\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*k?cal\b")
     p["protein_g"] = filled("protein_g", r"\bprotein\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b")
+    p["total_fat_g"] = filled("total_fat_g", r"\b(?:total\s+)?fat\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b")
+    p["saturated_fat_g"] = filled("saturated_fat_g", r"\bsaturat\w*[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b")
+    p["trans_fat_g"] = filled("trans_fat_g", r"\btrans[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b")
+    p["carbohydrate_g"] = filled("carbohydrate_g", r"\bcarbohydrate?s?\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b")
+    p["fiber_g"] = filled("fiber_g", r"\b(?:dietary\s+)?fib(?:re|er)\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b")
+    # sodium: keep the printed mg, or convert a g value / a salt figure (sodium ≈ salt × 0.4)
+    if _num(p.get("sodium_mg")) is None:
+        m = re.search(r"\bsodium\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*(mg|g)\b", text, re.I)
+        if m:
+            p["sodium_mg"] = float(m.group(1)) * (1000 if m.group(2).lower() == "g" else 1)
+        else:
+            s = re.search(r"\bsalt\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b", text, re.I)
+            p["sodium_mg"] = round(float(s.group(1)) * 400) if s else None
+    else:
+        p["sodium_mg"] = _num(p.get("sodium_mg"))
 
     ing = p.get("ingredients")
     if not isinstance(ing, list) or not ing:
@@ -250,6 +316,9 @@ def _normalize(p: dict) -> dict:
     if not p.get("best_before"):
         m = re.search(r"best\s*before[^\n]{0,60}", text, re.I)
         p["best_before"] = m.group(0).strip() if m else None
+    if not p.get("serving_size"):
+        m = re.search(r"serving\s*size\s*[:\-]?\s*([\d.]+\s*(?:g|ml|kg|l)\b[^\n.;]*)", text, re.I)
+        p["serving_size"] = m.group(1).strip() if m else None
 
     p["safety_missing"] = _safety_missing(text)
     p.setdefault("missing", [])
@@ -294,7 +363,7 @@ def _ocr_json(text: str) -> dict:
                 break
     if best is not None:
         return best
-    log.warning("OCR reply was not JSON — degrading to raw_text (%s chars)", len(text or ""))
+    log.warning("OCR reply was not JSON — degrading to raw_text ({} chars)", len(text or ""))
     return {"raw_text": text or ""}
 
 
@@ -336,7 +405,7 @@ def _ocr_label(image: bytes, content_type: str, model: str) -> dict:
             ],
             "safety_missing": list(SAFETY_FIELDS),
         }
-    log.info("OCR request: model=%s content_type=%s bytes=%s", model, content_type, len(image))
+    log.info("OCR request: model={} content_type={} bytes={}", model, content_type, len(image))
     # Gemma ignores response_format, so we drive the shape from the prompt and
     # ask for exactly the flat keys the frontend renders. raw_text stays the
     # safety net the client re-parses when a key is missing/garbled.
@@ -352,6 +421,12 @@ def _ocr_label(image: bytes, content_type: str, model: str) -> dict:
         '- sugar_g: number — sugars per the nutrition basis.\n'
         '- energy_kcal: number.\n'
         '- protein_g: number.\n'
+        '- total_fat_g: number — total fat per the nutrition basis.\n'
+        '- saturated_fat_g: number.\n'
+        '- trans_fat_g: number.\n'
+        '- carbohydrate_g: number — total carbohydrate.\n'
+        '- fiber_g: number — dietary fibre.\n'
+        '- sodium_mg: number in milligrams (if only salt is printed, sodium_mg ≈ salt_g × 400).\n'
         '- nutrition_basis: e.g. "100 ml", "100 g", or "per serving".\n'
         '- net_quantity: e.g. "300 ml".\n'
         '- serving_size.\n'
@@ -377,6 +452,8 @@ def _ocr_label(image: bytes, content_type: str, model: str) -> dict:
             ],
         }],
     }
+    if _thinking_off(model):
+        payload["reasoning_effort"] = "none"  # Google maps none → thinking_budget 0
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
@@ -393,7 +470,7 @@ def _ocr_label(image: bytes, content_type: str, model: str) -> dict:
                 with urlopen(request, timeout=OCR_HTTP_TIMEOUT) as response:
                     data = json.load(response)
                     log.info(
-                        "OCR response: model=%s status=%s choices=%s usage=%s",
+                        "OCR response: model={} status={} choices={} usage={}",
                         model, response.status, len(data.get("choices", [])),
                         data.get("usage", {}),
                     )
@@ -401,11 +478,16 @@ def _ocr_label(image: bytes, content_type: str, model: str) -> dict:
             except HTTPError as error:
                 detail = error.read()[:300].decode(errors="replace")
                 log.warning(
-                    "OCR model=%s -> HTTP %s (attempt %s/%s): %s",
+                    "OCR model={} -> HTTP {} (attempt {}/{}): {}",
                     model, error.code, attempt, attempts, detail,
                 )
+                # 503 UNAVAILABLE = overloaded ("high demand"); 404 = bad/unsupported
+                # model id. Neither is fixable by retrying THIS model — roll to the next
+                # so one overloaded or mistyped model can't take down the whole chain.
+                if error.code in {404, 503}:
+                    raise _Overloaded(model) from error
                 # 400/404/422 = payload issue (handled by caller's fallback); don't retry.
-                # 429/5xx = free-tier rate limit or upstream blip; back off and retry.
+                # 429/other-5xx = rate limit or upstream blip; back off and retry.
                 if error.code not in {429} and error.code < 500:
                     raise
                 if attempt == attempts:
@@ -418,26 +500,25 @@ def _ocr_label(image: bytes, content_type: str, model: str) -> dict:
     except HTTPError as error:
         if error.code == 429:
             raise _RateLimited(model) from error  # let the caller fall to the next model
-        log.error("OCR failed model=%s: HTTP %s", model, error.code)
+        log.error("OCR failed model={}: HTTP {}", model, error.code)
         raise HTTPException(
             status_code=502,
             detail="The free AI reader hit an error on this photo — please try again.",
         ) from error
     except (TimeoutError, socket.timeout) as error:
-        log.error("OCR timed out model=%s: %s", model, error)
-        raise HTTPException(
-            status_code=504,
-            detail="The free AI reader is slow right now and timed out — try again in a moment.",
-        ) from error
+        # A hung model shouldn't 504 the whole scan — roll to the next in the chain.
+        log.warning("OCR timed out model={} ({:.0f}s) — rolling to next model: {}",
+                    model, OCR_HTTP_TIMEOUT, error)
+        raise _Overloaded(model) from error
     except (OSError, URLError, TypeError, ValueError, json.JSONDecodeError) as error:
-        log.error("OCR failed model=%s: %s", model, error)
+        log.error("OCR failed model={}: {}", model, error)
         raise HTTPException(
             status_code=502,
             detail="Couldn't read this photo — try a tighter crop or better light, then scan again.",
         ) from error
     parsed = _normalize(parsed)
     log.info(
-        "OCR ok model=%s sugar=%s ingredients=%s",
+        "OCR ok model={} sugar={} ingredients={}",
         model, parsed.get("sugar_g"), len(parsed.get("ingredients") or []),
     )
     return {"status": "complete", **parsed}
@@ -460,7 +541,7 @@ async def scan_label(request: FastAPIRequest) -> dict:
     """Read a temporary camera photo and return only evidence visible in it."""
     content_type = request.headers.get("content-type", "")
     log.info(
-        "scan-label: ip=%s ua=%r content_type=%r length=%s",
+        "scan-label: ip={} ua={!r} content_type={!r} length={}",
         request.client.host if request.client else "?",
         request.headers.get("user-agent", "")[:80],
         content_type,
@@ -482,7 +563,11 @@ async def scan_label(request: FastAPIRequest) -> dict:
         try:
             return await asyncio.to_thread(_ocr_label, image, content_type, model)
         except _RateLimited:
-            log.warning("model %s hit its rate limit — falling through the chain", model)
+            log.warning("model {} hit its rate limit — falling through the chain", model)
             async with _ocr_gate_lock:
                 _mark_spent(model)
+            tried.add(model)
+        except _Overloaded:
+            # Transient (503 / timeout): skip for THIS request only, don't mark spent.
+            log.warning("model {} overloaded — falling through the chain", model)
             tried.add(model)

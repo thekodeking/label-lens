@@ -1,18 +1,19 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f7f8ef">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#fafafa">
   <title>Label Lens</title><link rel="stylesheet" href="/tokens.css">
   <style>
-    /* Hallmark · macrostructure: Marquee Hero · tone: modern-minimal · anchor hue: botanical-green
-     * theme: Orchard (custom) · nav: N2 chip (minimised) · footer: minimal
-     * pre-emit critique: P5 H5 E4 S4 R5 V5 */
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+    /* Hallmark · macrostructure: Marquee Hero · tone: technical · anchor hue: neutral (monochrome)
+     * theme: Graphite (custom, monochromatic) · nav: N2 chip (minimised) · footer: minimal
+     * mono-led type — display + data IBM Plex Mono · body IBM Plex Sans
+     * pre-emit critique: P5 H5 E4 S5 R5 V5 */
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
     *,*::before,*::after{box-sizing:border-box}
     html,body{overflow-x:clip}
     body{margin:0;color:var(--color-ink);background:var(--color-paper);font-family:var(--font-body);font-size:var(--text-base);line-height:1.5;-webkit-tap-highlight-color:transparent}
     button,input,select{font:inherit;color:inherit}button{cursor:pointer}a{color:var(--color-accent)}
-    h1,h2,h3{margin:0;font-family:var(--font-display);font-weight:700;font-style:normal;letter-spacing:-.02em;line-height:1;overflow-wrap:anywhere;min-width:0}
+    h1,h2,h3{margin:0;font-family:var(--font-display);font-weight:700;font-style:normal;letter-spacing:-.01em;line-height:1;overflow-wrap:anywhere;min-width:0}
     :focus-visible{outline:var(--rule-heavy) solid var(--color-focus);outline-offset:2px;border-radius:2px}
     .shell{width:min(680px,calc(100% - 32px));margin:auto}
 
@@ -23,35 +24,40 @@
     .brand .wm{font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;letter-spacing:.02em}
     .brand:hover .wm{color:var(--color-ink)}
 
-    main{padding:var(--space-2xl) 0 var(--space-3xl)}
+    main{padding:var(--space-lg) 0 var(--space-lg)}
 
     /* marquee hero — the promise is the star, not the name */
-    .eyebrow{display:inline-block;color:var(--color-accent);font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
-    h1{margin:var(--space-sm) 0;font-size:var(--text-display);font-weight:700;letter-spacing:-.035em}
-    .coral{color:var(--color-warn)}
+    .eyebrow{display:inline-flex;align-items:center;gap:.5ch;color:var(--color-accent);font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+    .eyebrow::before{content:"["}.eyebrow::after{content:"]"}
+    .eyebrow::before,.eyebrow::after{color:var(--color-muted);font-weight:400}
+    h1{margin:var(--space-sm) 0;font-size:var(--text-display);font-weight:700;letter-spacing:-.02em}
+    .coral{color:var(--color-ink);text-decoration:underline;text-decoration-thickness:.09em;text-underline-offset:.12em;text-decoration-color:var(--color-muted)}
     .lede{max-width:34ch;margin:0;color:var(--color-ink-2);font-size:var(--text-md)}
 
-    .scan-card{margin-top:var(--space-lg);padding:var(--space-md);background:var(--color-paper-2);border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-lg)}
-    .scan-card .k{display:block;color:var(--color-muted);font-family:var(--font-body);font-weight:600;font-size:var(--text-xs);letter-spacing:.08em;text-transform:uppercase}
-    .scan-card>p{margin:6px 0 var(--space-md);max-width:32ch;color:var(--color-ink-2);font-size:var(--text-sm)}
+    .scan-card{margin-top:var(--space-lg)}
+    .scan-card .k{display:inline-flex;align-items:center;gap:.7ch;color:var(--color-muted);font-family:var(--font-mono);font-weight:500;font-size:var(--text-xs);letter-spacing:.08em;text-transform:uppercase}
+    .scan-card .k::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--color-accent)}
+    .scan-card>p{margin:8px 0 var(--space-md);max-width:40ch;color:var(--color-ink-2);font-size:var(--text-sm)}
     .scan-btns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-2xs)}
-    .big-btn{display:flex;flex-direction:column;gap:6px;min-height:88px;padding:var(--space-sm);border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-md);background:var(--color-paper);text-align:left;transition:border-color var(--dur-short) var(--ease-out),background var(--dur-short),transform var(--dur-short)}
+    .big-btn{display:flex;align-items:center;gap:var(--space-xs);min-height:74px;padding:var(--space-sm);border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-md);background:var(--color-paper);text-align:left;transition:border-color var(--dur-short) var(--ease-out),background var(--dur-short),transform var(--dur-short)}
     .big-btn:first-child{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-accent-ink)}
     .big-btn:hover,.big-btn.is-hover{transform:translateY(-2px)}
-    .big-btn:not(:first-child):hover{border-color:var(--color-accent)}
+    .big-btn:not(:first-child):hover{border-color:var(--color-ink)}
     .big-btn:active,.big-btn.is-active{transform:scale(.98)}
     .big-btn:disabled{opacity:.5;cursor:not-allowed}
-    .big-btn .ico{font-size:1.35rem;line-height:1}
-    .big-btn b{font-family:var(--font-display);font-size:var(--text-md);font-weight:600}
-    .big-btn span{font-family:var(--font-mono);font-size:var(--text-xs);opacity:.8}
-    @media (max-width:560px){
-      .scan-btns{grid-template-columns:1fr}
-      .big-btn{flex-direction:row;align-items:center;min-height:0;gap:var(--space-xs)}
-      .big-btn .ico{flex:0 0 auto}
-      .big-btn b{flex:1}
-      .big-btn span{opacity:.7}
-    }
+    .bb-ico{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:var(--radius-sm);background:var(--color-panel);border:var(--rule-hairline) solid var(--color-rule);font-size:1.15rem;line-height:1}
+    .big-btn:first-child .bb-ico{background:var(--color-glass);border-color:var(--color-glass-2)}
+    .bb-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+    .bb-txt b{font-family:var(--font-display);font-size:var(--text-md);font-weight:600;letter-spacing:-.01em}
+    .bb-txt span{font-family:var(--font-mono);font-size:var(--text-xs);opacity:.7}
+    .bb-go{flex:none;align-self:center;font-family:var(--font-mono);font-size:var(--text-md);opacity:.4;transition:transform var(--dur-short) var(--ease-out),opacity var(--dur-short)}
+    .big-btn:hover .bb-go,.big-btn.is-hover .bb-go{transform:translateX(3px);opacity:.9}
+    @media (max-width:560px){.scan-btns{grid-template-columns:1fr}}
     .hint{margin-top:var(--space-sm);color:var(--color-muted);font-family:var(--font-mono);font-size:var(--text-xs)}
+    .notes{margin:var(--space-md) 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-2xs)}
+    .notes li{display:inline-flex;align-items:center;gap:.6ch;padding:6px 12px;border-radius:var(--radius-pill);border:var(--rule-hairline) solid var(--color-rule);background:var(--color-paper-2);color:var(--color-ink-2);font-family:var(--font-mono);font-size:var(--text-xs);white-space:nowrap}
+    .nd{width:6px;height:6px;border-radius:50%;background:var(--color-accent)}
+    @media(max-width:480px){.notes{gap:6px}.notes li{padding:6px 10px;font-size:.7rem}}
 
     .scan-feedback{display:none;margin-top:var(--space-sm);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);border-left:3px solid var(--color-accent);background:var(--color-accent-soft)}
     .scan-feedback.busy{border-left-color:var(--color-sugar);background:var(--color-panel)}
@@ -59,14 +65,15 @@
     .scan-feedback ul{margin:0;padding-left:var(--space-md);color:var(--color-ink-2);font-size:var(--text-sm);line-height:1.6}
 
     /* report */
-    .detail{display:none;margin-top:var(--space-lg)}
+    .detail{display:none;margin-top:var(--space-lg);counter-reset:panel}
     .detail>*{animation:fadeUp var(--dur-mid) var(--ease-out) both}
     .report-nav{display:flex;justify-content:space-between;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-md)}
-    .back-search{padding:9px 14px;border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-pill);background:var(--color-paper-2);color:var(--color-ink);font-family:var(--font-mono);font-size:var(--text-xs);transition:border-color var(--dur-short),color var(--dur-short)}
+    .back-search{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-pill);background:var(--color-paper-2);color:var(--color-ink);font-family:var(--font-mono);font-size:var(--text-xs);transition:border-color var(--dur-short),color var(--dur-short)}
     .back-search:hover{border-color:var(--color-accent);color:var(--color-accent)}
     .report-nav .hint{margin:0}
     .report-head{padding-bottom:var(--space-sm);border-bottom:var(--rule-hairline) solid var(--color-rule)}
-    .report-kicker{color:var(--color-accent);font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+    .report-kicker{color:var(--color-accent);font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+    .report-kicker::before{content:"> ";color:var(--color-muted)}
     .detail h2{margin-top:8px;font-size:clamp(1.8rem,7vw,2.8rem);font-weight:700;letter-spacing:-.03em}
     .brand-line{margin-top:8px;color:var(--color-ink-2);font-size:var(--text-sm)}
 
@@ -74,7 +81,7 @@
     .verdict{margin-top:var(--space-sm);padding:var(--space-md);color:var(--color-on-shade);background:var(--color-shade);border-radius:var(--radius-lg)}
     .v-lead{padding-bottom:var(--space-sm);border-bottom:var(--rule-hairline) solid var(--color-glass-2)}
     .v-k{color:var(--color-sugar);font-family:var(--font-body);font-weight:600;font-size:var(--text-xs);letter-spacing:.09em;text-transform:uppercase}
-    .big-num{margin-top:10px;display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;font-family:var(--font-display);font-weight:700;letter-spacing:-.04em;font-size:clamp(3rem,16vw,4.8rem);line-height:.82;font-variant-numeric:tabular-nums}
+    .big-num{margin-top:10px;display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;font-family:var(--font-display);font-weight:700;letter-spacing:-.02em;font-size:clamp(2.6rem,14vw,4.4rem);line-height:.82;font-variant-numeric:tabular-nums}
     .big-num em{font-style:normal;color:var(--color-shade);background:var(--color-sugar);font-size:.28em;font-weight:700;letter-spacing:-.01em;padding:.28em .6em;border-radius:var(--radius-pill);align-self:center}
     .tsp-viz{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--space-sm)}
     .tsp-viz i{width:15px;height:15px;border-radius:50%;background:var(--color-sugar);animation:pop var(--dur-mid) var(--ease-out) both}
@@ -84,34 +91,41 @@
     .v-note{margin:var(--space-sm) 0 0;color:var(--color-on-shade-mut);font-size:var(--text-sm)}
     .v-note b{color:var(--color-on-shade)}
     .v-note .ref{display:block;margin-top:6px;font-size:var(--text-xs);opacity:.7}
-    .v-tiles{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-2xs);margin-top:var(--space-md)}
-    .v-tile{padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);background:var(--color-glass)}
-    .v-tile.hot{background:var(--color-warn-tint);box-shadow:inset 0 0 0 1px var(--color-warn)}
-    .v-tile .n{font-family:var(--font-display);font-size:1.75rem;font-weight:700;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-    .v-tile .l{margin-top:7px;color:var(--color-on-shade-mut);font-size:var(--text-xs);line-height:1.35}
-    .flag-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--space-sm)}
-    .flag-chip{padding:6px 10px;border-radius:var(--radius-pill);background:var(--color-warn);color:var(--color-accent-ink);font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500}
+    .v-concerns{margin-top:var(--space-md);display:flex;flex-direction:column;gap:var(--space-2xs)}
+    .v-ctitle{margin-bottom:2px;color:var(--color-on-shade-mut);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.06em;text-transform:uppercase}
+    .v-crow{display:flex;gap:11px;padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);background:var(--color-glass);border:var(--rule-hairline) solid var(--color-glass-2)}
+    .v-crow--high{background:var(--color-warn-tint);border-color:transparent;box-shadow:inset 0 0 0 1px var(--color-on-shade)}
+    .v-cdot{flex:none;width:8px;height:8px;margin-top:6px;border-radius:50%;background:var(--color-on-shade-mut)}
+    .v-crow--high .v-cdot{background:var(--color-on-shade)}
+    .v-cbody{min-width:0}
+    .v-cbody b{display:block;font-family:var(--font-display);font-size:var(--text-sm);font-weight:600;letter-spacing:-.01em}
+    .v-cbody span{display:block;margin-top:2px;color:var(--color-on-shade-mut);font-size:var(--text-sm);line-height:1.45}
+    .v-clean{margin-top:var(--space-md);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);background:var(--color-glass);border:var(--rule-hairline) solid var(--color-glass-2);color:var(--color-on-shade-mut);font-size:var(--text-sm);line-height:1.5}
+    .v-clean b{color:var(--color-on-shade)}
 
-    /* bento — composition sized by volume */
-    .bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:112px;gap:var(--space-2xs);margin-top:var(--space-sm)}
-    .b{grid-column:span 2;display:flex;flex-direction:column;justify-content:space-between;padding:var(--space-md);border-radius:var(--radius-md);background:var(--color-panel);border:var(--rule-hairline) solid var(--color-rule);overflow:hidden}
-    .b-lg{grid-column:span 2;grid-row:span 2}
-    .b-sugar{background:var(--color-sugar-soft);border-color:var(--color-sugar)}
-    .b-warn{background:var(--color-warn-soft);border-color:var(--color-warn-soft)}
-    .b .bl{color:var(--color-ink-2);font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-    .b .bn{font-family:var(--font-display);font-weight:700;letter-spacing:-.03em;line-height:.85;font-variant-numeric:tabular-nums;font-size:clamp(1.9rem,7vw,2.5rem)}
-    .b-lg .bn{font-size:clamp(3rem,13vw,4.2rem)}
-    .b .bu{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-muted)}
-    .b-fill{height:6px;border-radius:3px;background:var(--color-rule);overflow:hidden;margin-top:2px}
-    .b-fill i{display:block;height:100%;border-radius:3px;background:var(--color-accent);transform-origin:left;animation:growx var(--dur-long) var(--ease-out) both}
-    .b-sugar .b-fill i{background:var(--color-sugar)}.b-warn .b-fill i{background:var(--color-warn)}
-    .b-chips{display:flex;flex-wrap:wrap;gap:5px}
+    /* nutrition grid — one scaled card per nutrient (mobile-first 2-col) */
+    .nutgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2xs);margin-top:var(--space-sm)}
+    .nut{padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);background:var(--color-paper-2);border:var(--rule-hairline) solid var(--color-rule)}
+    .nut--hi{box-shadow:inset 0 0 0 1px var(--color-ink);border-color:var(--color-ink)}
+    .nut--mid{background:var(--color-panel)}
+    .nut--good{background:var(--color-accent-soft)}
+    .nut-h{display:flex;align-items:center;justify-content:space-between;gap:6px}
+    .nut-l{min-width:0;color:var(--color-ink-2);font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.05em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .nut-tag{flex:none;padding:2px 7px;border-radius:var(--radius-pill);background:var(--color-ink);color:var(--color-paper);font-family:var(--font-mono);font-size:.62rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+    .nut-tag--ok{background:var(--color-good);color:var(--color-accent-ink)}
+    .nut-v{margin-top:8px;font-family:var(--font-display);font-weight:700;font-size:clamp(1.5rem,7vw,1.9rem);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+    .nut-v span{margin-left:3px;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:400;color:var(--color-muted)}
+    .nut-bar{margin-top:10px;height:5px;border-radius:3px;background:var(--color-rule);overflow:hidden}
+    .nut-bar i{display:block;height:100%;border-radius:3px;background:var(--color-ink-2);transform-origin:left;animation:growx var(--dur-long) var(--ease-out) both}
+    .nut--hi .nut-bar i{background:var(--color-ink)}.nut--good .nut-bar i{background:var(--color-good)}
+    .nut-dv{margin-top:7px;color:var(--color-muted);font-family:var(--font-mono);font-size:.68rem;line-height:1.3}
     @keyframes growx{from{transform:scaleX(0)}}
-    @media(max-width:560px){.bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:104px}.b{grid-column:span 1}.b-lg{grid-column:span 2}}
+    @media(min-width:600px){.nutgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
     .panel{padding:var(--space-lg) 0 0}
-    .section-label{display:flex;align-items:center;gap:9px;margin-bottom:var(--space-md);color:var(--color-ink-2);font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;letter-spacing:.07em;text-transform:uppercase}
-    .section-label::before{content:"";width:16px;height:2px;border-radius:2px;background:var(--color-accent)}
+    .section-label{display:flex;align-items:baseline;gap:10px;margin-bottom:var(--space-md);color:var(--color-ink-2);font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+    .section-label::before{counter-increment:panel;content:counter(panel,decimal-leading-zero);flex:none;color:var(--color-accent);font-family:var(--font-mono);font-weight:500;letter-spacing:0}
+    .section-label::after{content:"";align-self:center;flex:1;height:1px;background:var(--color-rule)}
     .report-meta{margin:var(--space-2xs) 0 0;color:var(--color-muted);font-size:var(--text-sm)}
     .report-meta b{color:var(--color-ink-2)}
 
@@ -137,77 +151,93 @@
     .serving-note p{margin:0;color:var(--color-ink-2);font-size:var(--text-sm);line-height:1.55}
     .serving-note b{color:var(--color-ink)}
     .serving-note p+p{margin-top:8px}
-    .mfg-calc{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px;font-size:var(--text-sm);font-weight:500}
-    .mfg-calc input{padding:9px 11px;border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-sm);background:var(--color-paper-2);color:var(--color-ink);font:inherit}
 
-    /* scanning loader */
+    /* scanning loader — pixel-grid shimmer + live elapsed timer */
     .scanning{padding:var(--space-md);border-radius:var(--radius-lg);background:var(--color-paper-2);border:var(--rule-hairline) solid var(--color-rule)}
-    .scan-anim{position:relative;overflow:hidden;padding:var(--space-md);border-radius:var(--radius-md);background:var(--color-panel)}
-    .scan-anim .sk{display:block;height:12px;border-radius:6px;background:linear-gradient(90deg,var(--color-rule),var(--color-panel),var(--color-rule));background-size:200% 100%;animation:shimmer 1.4s var(--ease-in-out) infinite}
-    .scan-anim .sk+.sk{margin-top:12px}
-    .sk1{width:55%}.sk2{width:85%}.sk3{width:70%}.sk4{width:40%}
-    .scan-line{position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--color-sugar),transparent);box-shadow:0 0 12px 2px var(--color-sugar);animation:scan 1.8s var(--ease-in-out) infinite}
-    .scan-status{margin-top:var(--space-md);text-align:center}
-    .scan-status strong{display:block;font-family:var(--font-display);font-size:var(--text-md);font-weight:600}
-    .scan-status p{margin:4px 0 0;color:var(--color-muted);font-size:var(--text-sm)}
-    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-    @keyframes scan{0%{top:0;opacity:0}12%{opacity:1}88%{opacity:1}100%{top:100%;opacity:0}}
+    .scan-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-sm)}
+    .scan-head strong{font-family:var(--font-display);font-size:var(--text-md);font-weight:600;letter-spacing:-.01em}
+    .scan-timer{flex:none;font-family:var(--font-mono);font-size:var(--text-sm);font-weight:500;color:var(--color-muted);font-variant-numeric:tabular-nums}
+    .pixgrid{margin-top:var(--space-sm);display:grid;grid-template-columns:repeat(12,1fr);gap:4px;max-width:216px}
+    .pixgrid i{aspect-ratio:1;border-radius:2px;background:var(--color-rule);animation:pix 1.5s var(--ease-in-out) infinite both}
+    @keyframes pix{0%,70%,100%{background:var(--color-rule)}35%{background:var(--color-ink)}}
+    .scan-sub{margin:var(--space-md) 0 0;color:var(--color-muted);font-size:var(--text-sm);line-height:1.55}
 
     .ingredients ol{margin:var(--space-sm) 0 0;padding:0;list-style:none}
     .ingredients li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:10px 0;border-bottom:var(--rule-hairline) solid var(--color-rule)}
     .ingredient-order{color:var(--color-muted);font-family:var(--font-mono);font-size:var(--text-sm)}
     .ingredient-flags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-    .ingredient-flag{padding:3px 8px;border-radius:var(--radius-sm);background:var(--color-warn-soft);color:var(--color-ink);font-family:var(--font-mono);font-size:var(--text-xs)}
+    .ingredient-flag{padding:3px 9px;border-radius:var(--radius-pill);background:var(--color-paper-2);border:var(--rule-hairline) solid var(--color-rule);color:var(--color-ink-2);font-family:var(--font-mono);font-size:var(--text-xs)}
+    .ingredient-flag--watch{border-color:var(--color-ink);color:var(--color-ink);font-weight:500}
+    .ingredient-flag--watch::before{content:"";display:inline-block;width:5px;height:5px;margin-right:5px;border-radius:50%;background:var(--color-ink);vertical-align:middle}
+
+    /* food-safety checklist */
+    .checklist{display:grid;gap:var(--space-2xs);margin-top:var(--space-sm)}
+    .chk{display:flex;gap:11px;padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);background:var(--color-panel);border:var(--rule-hairline) solid var(--color-rule)}
+    .chk--miss{background:var(--color-paper-2);box-shadow:inset 3px 0 0 var(--color-ink)}
+    .chk-mark{flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;font-family:var(--font-mono);font-size:.78rem;font-weight:600}
+    .chk--ok .chk-mark{background:var(--color-good);color:var(--color-accent-ink)}
+    .chk--miss .chk-mark{background:var(--color-ink);color:var(--color-paper)}
+    .chk-body{min-width:0}
+    .chk-body b{display:block;font-family:var(--font-display);font-size:var(--text-sm);font-weight:600;letter-spacing:-.01em}
+    .chk-body span{display:block;margin-top:2px;color:var(--color-ink-2);font-size:var(--text-sm);line-height:1.45}
 
     .label-card{margin-top:var(--space-sm);padding:var(--space-md);background:var(--color-paper-2);border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-md)}
     .lc-name{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;line-height:1.05;padding-bottom:8px;border-bottom:var(--rule-hairline) solid var(--color-rule)}
-    .lc-rows>div{display:flex;justify-content:space-between;gap:var(--space-md);padding:9px 0;border-bottom:var(--rule-hairline) solid var(--color-rule)}
-    .lc-rows dt{margin:0;color:var(--color-muted);font-family:var(--font-body);font-size:var(--text-xs);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
-    .lc-rows dd{margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+    .lc-rows>div{display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-md);padding:10px 0;border-bottom:var(--rule-hairline) solid var(--color-rule)}
+    .lc-rows dt{margin:0;flex:none;color:var(--color-muted);font-family:var(--font-mono);font-size:var(--text-sm);font-weight:400;letter-spacing:0}
+    .lc-rows dd{margin:0;text-align:right;color:var(--color-ink);font-family:var(--font-mono);font-size:var(--text-sm);font-weight:500;font-variant-numeric:tabular-nums}
     .lc-nutri{margin-top:var(--space-md)}
     .lc-cap{display:block;margin-bottom:8px;color:var(--color-accent);font-family:var(--font-body);font-weight:600;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.06em}
     .lc-nutri>div{display:flex;justify-content:space-between;padding:8px 0;border-bottom:var(--rule-hairline) solid var(--color-rule);font-size:var(--text-sm)}
     .lc-nutri>div>span{color:var(--color-ink-2)}
     .lc-nutri b{font-weight:600;font-variant-numeric:tabular-nums}
 
-    .calculation{padding:var(--space-md);border-radius:var(--radius-md);border-left:3px solid var(--color-warn);background:var(--color-warn-soft);font-size:var(--text-md);line-height:1.5}
-    .calculation b{display:block;margin-bottom:6px;font-family:var(--font-display);font-size:var(--text-lg);font-weight:600}
-    .calculation b[style]{display:inline;margin:0}
+    .factcard{display:flex;align-items:center;gap:var(--space-md);margin-top:var(--space-sm);padding:var(--space-md);border-radius:var(--radius-md);background:var(--color-panel);border:var(--rule-hairline) solid var(--color-rule)}
+    .factcard .big{flex:none;font-family:var(--font-display);font-weight:700;font-size:clamp(2.2rem,11vw,3rem);line-height:.85;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+    .factcard .big span{font-family:var(--font-mono);font-size:.36em;font-weight:400;color:var(--color-muted);margin-left:3px}
+    .factcard .ft{min-width:0}
+    .factcard .ft b{display:block;font-family:var(--font-display);font-size:var(--text-md);font-weight:600;letter-spacing:-.01em}
+    .factcard .ft span{display:block;margin-top:3px;color:var(--color-ink-2);font-size:var(--text-sm);line-height:1.4}
+    .factcard .chip{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:var(--radius-pill);background:var(--color-ink);color:var(--color-paper);font-family:var(--font-mono);font-size:var(--text-xs)}
 
-    .safety-missing{margin-top:var(--space-sm);padding:var(--space-md);border-radius:var(--radius-md);border-left:3px solid var(--color-warn);background:var(--color-warn-soft)}
-    .safety-missing strong{font-family:var(--font-display);font-weight:600}
-    .safety-missing ul,.plainlist{margin:6px 0 0;padding-left:var(--space-md);font-size:var(--text-sm);line-height:1.6}
     details{margin-top:var(--space-sm);color:var(--color-ink-2);font-size:var(--text-sm)}
     summary{color:var(--color-ink);font-family:var(--font-mono);font-size:var(--text-xs);cursor:pointer}
     pre{max-height:240px;overflow:auto;white-space:pre-wrap;margin-top:8px;padding:var(--space-sm);border-radius:var(--radius-sm);background:var(--color-panel);color:var(--color-ink-2);font-family:var(--font-mono);font-size:var(--text-xs);line-height:1.6}
 
     footer{margin-top:var(--space-2xl);padding:var(--space-md) 0 calc(var(--space-lg) + env(safe-area-inset-bottom,0px));border-top:var(--rule-hairline) solid var(--color-rule);color:var(--color-muted);font-family:var(--font-mono);font-size:var(--text-xs);line-height:1.6}
+    footer .fk{color:var(--color-ink);font-weight:500}
+    footer .fk::after{content:" · "}
 
-    dialog{width:min(560px,calc(100% - 24px));padding:var(--space-md);border:0;border-radius:var(--radius-lg);background:var(--color-paper);color:var(--color-ink)}
+    dialog{width:min(560px,calc(100% - 24px));padding:var(--space-md);border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-lg);background:var(--color-paper);color:var(--color-ink)}
     dialog::backdrop{background:var(--color-overlay)}
-    .dlg-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-sm)}
-    .dlg-head strong{font-family:var(--font-display);font-size:var(--text-md);font-weight:600}
-    .x{width:38px;height:38px;border:0;border-radius:50%;background:var(--color-panel);font-size:1.05rem}
-    .x:hover{background:var(--color-rule)}
+    .dlg-head{display:flex;justify-content:space-between;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-sm)}
+    .dlg-head strong{display:inline-flex;align-items:center;gap:.7ch;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-2)}
+    .dlg-head strong::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--color-accent)}
+    .x{flex:none;width:38px;height:38px;border:var(--rule-hairline) solid var(--color-rule);border-radius:50%;background:var(--color-paper-2);color:var(--color-ink-2);font-family:var(--font-mono);font-size:.95rem;transition:border-color var(--dur-short),color var(--dur-short)}
+    .x:hover{border-color:var(--color-ink);color:var(--color-ink)}
     .camera-view{display:block;width:100%;max-height:60vh;border-radius:var(--radius-md);object-fit:cover;background:var(--color-ink)}
     .dlg-actions{display:flex;gap:var(--space-2xs);margin-top:var(--space-md)}
     .dlg-actions>*{flex:1}
-    .primary{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 18px;border:0;border-radius:var(--radius-pill);color:var(--color-accent-ink);background:var(--color-accent);font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;transition:filter var(--dur-short),transform var(--dur-short)}
-    .primary:hover{filter:brightness(1.08)}.primary:active{transform:scale(.97)}.primary:disabled{opacity:.55;cursor:wait}
-    .ghost{min-height:50px;border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-pill);background:var(--color-paper-2);font-family:var(--font-mono);font-size:var(--text-xs)}
+    .primary{display:inline-flex;align-items:center;justify-content:center;gap:.6ch;min-height:52px;padding:0 18px;border:var(--rule-hairline) solid var(--color-accent);border-radius:var(--radius-md);color:var(--color-accent-ink);background:var(--color-accent);font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;letter-spacing:.03em;transition:filter var(--dur-short),transform var(--dur-short)}
+    .primary:hover{filter:brightness(1.15)}.primary:active{transform:scale(.97)}.primary:disabled{opacity:.55;cursor:wait}
+    .ghost{min-height:52px;border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-md);background:var(--color-paper-2);color:var(--color-ink);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.03em;transition:border-color var(--dur-short)}
     .ghost:hover{border-color:var(--color-ink)}
     .crop-stage{position:relative;touch-action:none;user-select:none;line-height:0;background:var(--color-ink);border-radius:var(--radius-md);overflow:hidden}
     .crop-stage img{display:block;width:100%;max-height:64vh;object-fit:contain;pointer-events:none}
-    .crop-mask{position:absolute;inset:0;box-shadow:0 0 0 9999px var(--color-overlay);border:1px solid var(--color-sugar);cursor:move}
-    .crop-mask::before{content:"";position:absolute;inset:0;background:linear-gradient(var(--color-sugar),var(--color-sugar)) 0 0/100% 1px no-repeat,linear-gradient(var(--color-sugar),var(--color-sugar)) 0 100%/100% 1px no-repeat}
+    .crop-mask{position:absolute;inset:0;box-shadow:0 0 0 9999px var(--color-overlay);border:1px solid var(--color-paper);cursor:move}
+    .crop-mask::before{content:"";position:absolute;inset:0;background:linear-gradient(var(--color-paper),var(--color-paper)) 0 0/100% 1px no-repeat,linear-gradient(var(--color-paper),var(--color-paper)) 0 100%/100% 1px no-repeat}
     .h{position:absolute;width:26px;height:26px}
-    .h::after{content:"";position:absolute;width:14px;height:14px;background:var(--color-sugar);border:2px solid var(--color-ink);border-radius:3px;left:50%;top:50%;transform:translate(-50%,-50%)}
+    .h::after{content:"";position:absolute;width:13px;height:13px;background:var(--color-paper);border:2px solid var(--color-ink);border-radius:3px;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 1px var(--color-overlay)}
     .h.nw{left:-13px;top:-13px;cursor:nwse-resize}.h.ne{right:-13px;top:-13px;cursor:nesw-resize}
     .h.sw{left:-13px;bottom:-13px;cursor:nesw-resize}.h.se{right:-13px;bottom:-13px;cursor:nwse-resize}
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
     @keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
-    @media(min-width:600px){h1{font-size:clamp(3.6rem,8vw,5.4rem)}}
+    @media(min-width:600px){
+      main{padding:var(--space-2xl) 0 var(--space-3xl)}
+      h1{font-size:clamp(3.6rem,8vw,5.4rem)}
+      .panel{padding:var(--space-xl) 0 0}
+    }
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important}}
   </style>
 </head>
@@ -225,22 +255,26 @@
         <span class="k">Scan a label</span>
         <p>Point at the ingredients and nutrition panel. Crop before it reads.</p>
         <div class="scan-btns">
-          <button class="big-btn" id="scan-camera-trigger" type="button"><span class="ico">◉</span><b>Take photo</b><span>use camera</span></button>
-          <button class="big-btn" id="scan-upload-trigger" type="button"><span class="ico">▤</span><b>Upload</b><span>from gallery</span></button>
+          <button class="big-btn" id="scan-camera-trigger" type="button"><span class="bb-ico" aria-hidden="true">◉</span><span class="bb-txt"><b>Take photo</b><span>use camera</span></span><span class="bb-go" aria-hidden="true">→</span></button>
+          <button class="big-btn" id="scan-upload-trigger" type="button"><span class="bb-ico" aria-hidden="true">▤</span><span class="bb-txt"><b>Upload</b><span>from gallery</span></span><span class="bb-go" aria-hidden="true">→</span></button>
         </div>
       </div>
       <input id="scan-upload" type="file" accept="image/*" hidden>
-      <div class="hint">Educational only, not medical advice · for diet or health concerns, check with a doctor or dietitian<br>Runs on free infrastructure — scans are rate-limited and may queue briefly.</div>
       <div class="scan-feedback" id="scan-feedback" aria-live="polite"></div>
     </section>
     <section class="detail" id="detail"></section>
   </main>
-  <footer>Label Lens · an AI-assisted learning tool for reading packaged-food labels. Every number is AI-read off the pack or simple arithmetic — it can misread, isn't a diagnosis, and isn't a substitute for professional medical or dietary advice.</footer>
+  <ul class="notes" aria-label="About this tool">
+    <li><span class="nd" aria-hidden="true"></span>Read once · never stored</li>
+    <li><span class="nd" aria-hidden="true"></span>Not medical advice</li>
+    <li><span class="nd" aria-hidden="true"></span>Free tier · may queue</li>
+  </ul>
+  <footer><span class="fk">Label Lens</span> AI-assisted label reading. Numbers are read off the pack or simple arithmetic — they can misread, and this isn't medical advice.</footer>
 
   <dialog id="camera-dialog" aria-labelledby="camera-title">
     <div class="dlg-head"><strong id="camera-title">Frame the label</strong><button class="x" id="camera-close" type="button" aria-label="Close">✕</button></div>
     <video id="camera-view" class="camera-view" autoplay playsinline muted></video>
-    <div class="dlg-actions"><button class="ghost" id="camera-close2" type="button">Cancel</button><button class="primary" id="camera-capture" type="button">Capture</button></div>
+    <div class="dlg-actions"><button class="ghost" id="camera-close2" type="button">Cancel</button><button class="primary" id="camera-capture" type="button">Capture <span aria-hidden="true">→</span></button></div>
   </dialog>
 
   <dialog id="crop-dialog" aria-labelledby="crop-title">
@@ -251,7 +285,7 @@
         <div class="h nw" data-h="nw"></div><div class="h ne" data-h="ne"></div><div class="h sw" data-h="sw"></div><div class="h se" data-h="se"></div>
       </div>
     </div>
-    <div class="dlg-actions"><button class="ghost" id="crop-retake" type="button">Retake</button><button class="primary" id="crop-confirm" type="button">Read this crop</button></div>
+    <div class="dlg-actions"><button class="ghost" id="crop-retake" type="button">Retake</button><button class="primary" id="crop-confirm" type="button">Read this crop <span aria-hidden="true">→</span></button></div>
   </dialog>
 </div><script>
 const $=s=>document.querySelector(s),detail=$('#detail'),scanUpload=$('#scan-upload'),scanFeedback=$('#scan-feedback'),cameraDialog=$('#camera-dialog'),cameraView=$('#camera-view'),cropDialog=$('#crop-dialog'),cropImg=$('#crop-img'),cropStage=$('#crop-stage'),cropMask=$('#crop-mask');
@@ -273,12 +307,22 @@ function readNums(data){
   const g=(v,pat)=>{const n=numOf(v);if(n!=null)return n;const m=t.match(pat);return m?parseFloat(m[1]):null};
   const sugarG=g(data.sugar_g,/\bsugars?\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b/i);
   const energy=g(data.energy_kcal,/\benergy\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*k?cal\b/i);
+  const protein=g(data.protein_g,/\bprotein\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b/i);
+  const totFat=g(data.total_fat_g,/\b(?:total\s+)?fat\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b/i);
+  const satFat=g(data.saturated_fat_g,/\bsaturat\w*[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b/i);
+  const transFat=g(data.trans_fat_g,/\btrans[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b/i);
+  const carb=g(data.carbohydrate_g,/\bcarbohydrate?s?\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b/i);
+  const fiber=g(data.fiber_g,/\b(?:dietary\s+)?fib(?:re|er)\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b/i);
+  let sodiumMg=numOf(data.sodium_mg);
+  if(sodiumMg==null){const m=t.match(/\bsodium\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*(mg|g)\b/i);
+    if(m)sodiumMg=parseFloat(m[1])*(m[2].toLowerCase()==='g'?1000:1);
+    else{const s=t.match(/\bsalt\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*g\b/i);if(s)sodiumMg=Math.round(parseFloat(s[1])*400)}}
   const bm=(String(data.nutrition_basis||'').match(/(\d+)\s*(ml|g)/i))||t.match(/per\s*(\d+)\s*(ml|g)\b/i);
   const nm=(String(data.net_quantity||'').match(/(\d+(?:\.\d+)?)\s*(ml|g|l|kg)/i))||t.match(/net\s*(?:quantity|weight|content|vol\w*)\b[^\d\n]{0,20}?(\d+(?:\.\d+)?)\s*(ml|g|l|kg)\b/i);
   const unit=bm?bm[2].toLowerCase():(nm?nm[2].toLowerCase():'g');
   let packAmt=nm?parseFloat(nm[1]):null,packUnit=nm?nm[2].toLowerCase():unit;
   if(packAmt!=null){if(packUnit==='l')packAmt*=1000;if(packUnit==='kg')packAmt*=1000}
-  return {sugarG,basisAmt:bm?parseInt(bm[1]):100,unit,packAmt,energy};
+  return {sugarG,basisAmt:bm?parseInt(bm[1]):100,unit,packAmt,energy,protein,totFat,satFat,transFat,carb,fiber,sodiumMg};
 }
 // Ingredients as an ordered array — prefer the model's list, fall back to raw text.
 function ingList(data){
@@ -297,14 +341,18 @@ const FLAG_RULES=[
 const scanFlags=t=>FLAG_RULES.filter(([re])=>re.test(t)).map(([,l])=>l);
 // Common INS/E additive codes → plain names, so the truth isn't hidden behind a number.
 const INS={'102':'Tartrazine (colour)','104':'Quinoline yellow (colour)','110':'Sunset yellow (colour)','122':'Carmoisine (colour)','124':'Ponceau 4R (colour)','129':'Allura red (colour)','133':'Brilliant blue (colour)','143':'Fast green (colour)','150a':'Plain caramel (colour)','150c':'Ammonia caramel (colour)','150d':'Sulphite-ammonia caramel (colour)','160a':'Beta-carotene (colour)','171':'Titanium dioxide (colour)','202':'Potassium sorbate (preservative)','211':'Sodium benzoate (preservative)','223':'Sodium metabisulphite (preservative)','296':'Malic acid','300':'Vitamin C','322':'Lecithin (emulsifier)','330':'Citric acid','331':'Sodium citrate','338':'Phosphoric acid','339':'Sodium phosphate','407':'Carrageenan (thickener)','412':'Guar gum','415':'Xanthan gum','440':'Pectin','450':'Diphosphates','471':'Mono- & diglycerides (emulsifier)','476':'PGPR (emulsifier)','500':'Baking soda','501':'Potassium carbonate','503':'Ammonium carbonate','551':'Silicon dioxide (anti-caking)','621':'MSG — monosodium glutamate','627':'Disodium guanylate (enhancer)','631':'Disodium inosinate (enhancer)','635':'Disodium ribonucleotides','950':'Acesulfame-K (sweetener)','951':'Aspartame (sweetener)','952':'Cyclamate (sweetener)','954':'Saccharin (sweetener)','955':'Sucralose (sweetener)','960':'Steviol glycosides (sweetener)','1400':'Modified starch'};
+// The more-debated additives — synthetic colours, MSG/enhancers, artificial
+// sweeteners, titanium dioxide, and a few preservatives. Marked, not condemned.
+const ADDITIVE_WATCH=new Set(['102','104','110','122','124','129','133','143','171','211','223','621','627','631','635','950','951','952','954','955']);
+const isWatched=code=>ADDITIVE_WATCH.has(code)||ADDITIVE_WATCH.has(String(code).replace(/[a-d]$/,''));
 function decodeItem(t){const out=[],re=/(?:\b(?:ins|e)\s*|\()(\d{3,4})\s*([a-d]?)\)?/ig;let m;while((m=re.exec(t))){const key=m[1]+(m[2]||''),name=INS[key]||INS[m[1]];if(name&&!out.some(o=>o.name===name))out.push({code:key,name})}return out}
 function parseItems(t){const out=[];let cur='',d=0;for(const c of String(t)){if('(['.includes(c)||c==='{')d++;else if(')]'.includes(c)||c==='}')d=Math.max(0,d-1);if(c===','&&d===0){if(cur.trim())out.push(cur.trim());cur=''}else cur+=c}if(cur.trim())out.push(cur.trim().replace(/\.$/,''));return out}
 function scanIngredients(data){
   const items=ingList(data);
-  if(!items.length)return '<p class="report-meta">No ingredient list was legible — retake with the ingredients panel in sharp focus. That list is where the truth usually hides.</p>';
+  if(!items.length)return '<p class="report-meta">No ingredient list was legible in this photo — retake with the ingredients panel in sharp focus.</p>';
   return `<ol>${items.map((t,i)=>{
     const dec=decodeItem(t),cats=scanFlags(t).filter(c=>!(dec.length&&c==='Additive')),
-      chips=[...dec.map(d=>`<span class="ingredient-flag" title="Additive code ${escapeHtml(d.code)}">${escapeHtml(d.name)}</span>`),...cats.map(l=>`<span class="ingredient-flag">${escapeHtml(l)}</span>`)];
+      chips=[...dec.map(d=>{const w=isWatched(d.code);return `<span class="ingredient-flag${w?' ingredient-flag--watch':''}" title="Additive code ${escapeHtml(d.code)}${w?' · one of the more-debated additives (colours, enhancers, artificial sweeteners)':''}">${escapeHtml(d.name)}</span>`}),...cats.map(l=>`<span class="ingredient-flag">${escapeHtml(l)}</span>`)];
     return `<li><span class="ingredient-order">${String(i+1).padStart(2,'0')}</span><span>${escapeHtml(t)}${chips.length?`<span class="ingredient-flags">${chips.join('')}</span>`:''}</span></li>`;
   }).join('')}</ol>`;
 }
@@ -313,53 +361,25 @@ function truthHtml(data){
   if(sugarG==null||sugarG===0)return '';
   const perUnit=sugarG/basisAmt,dailyAmt=Math.round(25/perUnit),
     packSugar=packAmt!=null?sugarG*packAmt/basisAmt:null,
-    packPct=packSugar!=null?Math.round(packSugar/25*100):null;
-  return `<div class="calculation"><b>${dailyAmt} ${unit} hits the daily line</b>
-    Just <b style="display:inline">${dailyAmt} ${unit}</b> of this reaches the WHO suggested limit of ~25 g (6 tsp) free sugar for a whole day.
-    ${packPct!=null?` One ${packAmt} ${unit} pack is about <b style="display:inline">${packPct}%</b> of that daily suggestion on its own.`:''}</div>
-    <div class="report-meta">Reference arithmetic against a public WHO guideline — not a diagnosis. Free-sugar needs vary by person.</div>`;
+    packPct=packSugar!=null?Math.round(packSugar/25*100):null,
+    packChip=packPct==null?'':packPct>=100?`1 pack ≈ ${Math.round(packPct/10)/10} days' sugar`:`1 pack ≈ ${packPct}% of a day`;
+  return `<div class="factcard">
+    <div class="big">${dailyAmt}<span>${unit}</span></div>
+    <div class="ft"><b>of this = a full day's sugar</b>
+      <span>The WHO free-sugar line is ~25 g (6 tsp) a day.</span>
+      ${packChip?`<span class="chip">${packChip}</span>`:''}</div>
+  </div>
+  <p class="report-meta">Reference arithmetic on a public WHO guideline — not a diagnosis.</p>`;
 }
 function servingHtml(data){
-  const caps=data.captured||[],s=findField(caps,'serving','directions','how to use','preparation','dosage','recommended');
-  if(s)return `<div class="serving-note"><strong>Serving on the label</strong><p>${escapeHtml(s.value)}</p></div>`;
-  // No serving info in the image — fall back to the whole quantity and say so plainly.
+  const caps=data.captured||[],sv=data.serving_size||(findField(caps,'serving','directions','how to use','preparation','dosage','recommended')||{}).value;
+  if(sv)return `<div class="serving-note"><strong>Serving on the label</strong><p>${escapeHtml(sv)}</p></div>`;
   const {sugarG,basisAmt,unit,packAmt}=readNums(data),
     packSugar=(sugarG!=null&&packAmt!=null)?Math.round(sugarG*packAmt/basisAmt*10)/10:null,pt=tsp(packSugar);
-  const calc=packSugar!=null
-    ? `So these figures assume the <b>entire ${packAmt} ${unit} pack in one sitting: ${packSugar} g sugar ≈ ${pt} tsp</b>.`
-    : `We couldn't read a net quantity either, so we can't size a full-pack portion — go by the per-${basisAmt} ${unit} figure above.`;
-  return `<div class="serving-note assume"><strong>Serving size not found — assuming the whole pack</strong><p>We couldn't infer any serving or portion guidance from this image. ${calc} Treat it as the worst case and set your own limit using the sugar reveal above.</p></div>`;
-}
-// Dates: some packs print date/batch/MRP elsewhere ("see bottom of can") and give
-// a relative best-before ("8 months from manufacture"). Surface both, and let the
-// user enter the manufacture date to get an actual last-day.
-const WORDNUM={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,fifteen:15,eighteen:18,twentyfour:24};
-function freshnessHtml(data){
-  const t=(data.best_before||'')+' '+(data.dates_location||'')+'\n'+fullText(data),
-    seeElse=!!data.dates_location||/(see|printed|check|refer)[^.\n]{0,30}\b(bottom|base|underside|cap|crimp|neck)\b/i.test(t),
-    rel=t.match(/([a-z]+|\d+)\s*(day|week|month|year)s?\s*from\s*(manufactur|packag|production|mfg|packing)/i);
-  if(!seeElse&&!rel)return '';
-  let calc='';
-  if(rel){
-    const raw=rel[1].toLowerCase().replace(/[^a-z0-9]/g,''),n=/^\d+$/.test(raw)?+raw:WORDNUM[raw],unit=rel[2].toLowerCase();
-    if(n)calc=`<p>Best before is <b>${n} ${unit}${n>1?'s':''} from the date of manufacture</b>. Enter that date and we'll work out the last day:</p>
-      <label class="mfg-calc">Manufactured on <input type="date" id="mfg-date" data-n="${n}" data-unit="${unit}" oninput="computeBestBefore()"></label>
-      <p id="bb-out" class="report-meta"></p>`;
-  }
-  const note=seeElse?`<p>This pack prints the <b>date of manufacture, batch number and M.R.P. on the bottom / base</b> — they weren't in your photo, so check the can itself.</p>`:'';
-  return `<div class="serving-note assume"><strong>Dates &amp; freshness — check the can</strong>${note}${calc}</div>`;
-}
-function computeBestBefore(){
-  const el=document.getElementById('mfg-date'),out=document.getElementById('bb-out');if(!el||!out)return;
-  if(!el.value){out.textContent='';return}
-  const n=+el.dataset.n,unit=el.dataset.unit,d=new Date(el.value);
-  if(unit==='day')d.setDate(d.getDate()+n);else if(unit==='week')d.setDate(d.getDate()+n*7);else if(unit==='month')d.setMonth(d.getMonth()+n);else d.setFullYear(d.getFullYear()+n);
-  const today=new Date();today.setHours(0,0,0,0);d.setHours(0,0,0,0);
-  const days=Math.round((d-today)/86400000),fmt=d.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
-  out.innerHTML=days>1?`Best before <b>${fmt}</b> — about <b>${days} days</b> left.`
-    :days===1?`Best before <b>${fmt}</b> — <b>tomorrow is the last day</b>.`
-    :days===0?`Best before <b>${fmt}</b> — <b>today is the last day</b>.`
-    :`Best before <b>${fmt}</b> — <b>expired ${Math.abs(days)} days ago</b>. Don't consume.`;
+  const line=packSugar!=null
+    ? `Figures above assume the <b>whole ${packAmt} ${unit} pack</b> in one sitting — ${packSugar} g sugar ≈ ${pt} tsp. Worst case.`
+    : `No pack size either — go by the per-${basisAmt} ${unit} figures above.`;
+  return `<div class="serving-note assume"><strong>No serving size on the label</strong><p>${line}</p></div>`;
 }
 // Why these ingredients get flagged — plain, factual context (not a health verdict).
 const EXPLAIN={
@@ -374,6 +394,7 @@ function flagHits(data){const map={};ingList(data).forEach(t=>scanFlags(t).forEa
 const shorten=t=>t.length>34?t.slice(0,32).trimEnd()+'…':t;
 function explainHtml(data){
   const hits=flagHits(data),labels=Object.keys(hits);
+  if(!ingList(data).length)return '<div class="watch-empty">The ingredient list wasn\'t legible in this photo, so we <b>can\'t check it</b>. Retake with the ingredients panel in sharp focus.</div>';
   if(!labels.length)return '<div class="watch-empty">No added sugar, added fats, or additives were spotted in the readable ingredients — this one reads <b>clean so far</b>. Still worth a glance at the physical pack.</div>';
   return `<div class="watch-grid">${labels.sort((a,b)=>(EXPLAIN[b]?.risk||0)-(EXPLAIN[a]?.risk||0)).map(l=>{
     const e=EXPLAIN[l]||{risk:1,body:''},sev=e.risk>=2?'high':'watch',
@@ -406,11 +427,31 @@ function clarifiedHtml(data){
     ${nutriRows.length?`<div class="lc-nutri"><span class="lc-cap">Nutrition${data.nutrition_basis?' · '+escapeHtml(data.nutrition_basis):''}</span>${nutriRows.map(([k,v])=>`<div><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div>`:''}
   </div>`;
 }
+// Food-safety checklist — the things a shopper should confirm on the physical
+// pack. A ✓ only means it was legible in the photo, never that it's "safe".
+function checklistHtml(data){
+  const t=fullText(data);
+  const checks=[
+    ['Expiry / best-before date', data.best_before||/(best\s*before|expiry|exp\b|use\s*by)/i.test(t), 'The single most important check — confirm it is within date.'],
+    ['Manufacture / packed date', /(mfg|manufactur|packed|packing|mfd)\b/i.test(t), 'Often on the base, cap or crimp — look there on the pack.'],
+    ['FSSAI licence number', data.fssai||/fssai|lic(?:ence|ense)\s*no/i.test(t), 'A valid number means the maker is registered with the regulator.'],
+    ['Allergen declaration', /(allergen|may\s+contain|contains?\b[^\n]{0,40}\b(milk|nuts?|peanut|soy|gluten|wheat|egg|sesame|fish))/i.test(t), 'Vital if you have allergies — look for "contains" and "may contain".'],
+    ['Net quantity', data.net_quantity, 'Confirms how much product you actually get.'],
+    ['Batch / lot number', /(batch|lot|b\.?\s*no)\b/i.test(t), 'Needed for recalls and complaints.'],
+    ['Storage instructions', data.storage||/\bstore\b/i.test(t), 'e.g. "refrigerate after opening", "keep dry".'],
+    ['Veg / Non-veg mark', data.veg_nonveg||/non[- ]?veg|vegetarian/i.test(t), 'The green (veg) or brown (non-veg) dot.'],
+  ];
+  const miss=checks.filter(c=>!c[1]).length;
+  return `<div class="checklist">${checks.map(([l,ok,note])=>`
+    <div class="chk ${ok?'chk--ok':'chk--miss'}">
+      <span class="chk-mark" aria-hidden="true">${ok?'✓':'✕'}</span>
+      <div class="chk-body"><b>${escapeHtml(l)}</b><span>${ok?'Legible in your photo.':escapeHtml(note)}</span></div>
+    </div>`).join('')}</div>
+  <p class="report-meta">${miss?`${miss} of these weren't readable here — `:''}A ✓ only means it was legible in your photo. Always confirm dates and allergens on the physical pack before you rely on them.</p>`;
+}
 function scanVerdict(data){
-  const caps=data.captured||[],{sugarG,basisAmt,unit,packAmt,energy}=readNums(data),
-    st=tsp(sugarG),packSugar=(sugarG!=null&&packAmt!=null)?sugarG*packAmt/basisAmt:null,pt=tsp(packSugar),
-    flags=[...new Set(ingList(data).flatMap(scanFlags))],
-    caffeine=flags.includes('Caffeine')||/\bcaffeine\b/i.test(fullText(data));
+  const {sugarG,basisAmt,unit,packAmt}=readNums(data),
+    st=tsp(sugarG),packSugar=(sugarG!=null&&packAmt!=null)?sugarG*packAmt/basisAmt:null,pt=tsp(packSugar);
   const lead=sugarG==null
     ? `<span class="v-k">Sugar</span><div class="big-num">—</div><p class="v-note">No sugar value was legible in this photo. Retake with the nutrition panel in sharp focus for the reveal.</p>`
     : `<span class="v-k">Sugar per ${basisAmt} ${unit}</span>
@@ -418,56 +459,111 @@ function scanVerdict(data){
        <div class="tsp-viz">${spoons(st)}</div>
        <p class="v-note">${packSugar!=null?`Whole ${packAmt} ${unit} pack: <b>${Math.round(packSugar*10)/10}g sugar ≈ ${pt} tsp</b>.`:'Add the net quantity to the frame for a whole-pack total.'}
        <span class="ref">Reference: WHO suggests keeping free sugars under ~25 g (6 tsp) a day.</span></p>`;
-  const tile=(n,l,hot)=>`<div class="v-tile${hot?' hot':''}"><div class="n">${n}</div><div class="l">${l}</div></div>`;
-  const tiles=[
-    tile(flags.filter(f=>f!=='Caffeine').length,'ingredient flags to check',flags.length>0),
-    tile(caffeine?'Yes':'—','caffeine present',caffeine),
-    tile(energy!=null?energy:'—',`energy${sugarG!=null||energy!=null?` / ${basisAmt}${unit}`:''}`),
-    tile(st==null?'—':st,`tsp sugar / ${basisAmt}${unit}`,st!=null&&st>=6),
-  ].join('');
-  const chips=flags.length?`<div class="flag-strip">${flags.map(l=>`<span class="flag-chip">${escapeHtml(l)}</span>`).join('')}</div>`:'';
-  return `<div class="verdict"><div class="v-lead">${lead}</div><div class="v-tiles">${tiles}</div>${chips}</div>`;
+  const cs=concernList(data);
+  const high=cs.filter(c=>c.sev==='high').length;
+  const concerns=cs.length
+    ? `<div class="v-concerns"><div class="v-ctitle">${high?`${high} thing${high>1?'s':''} worth a closer look`:'Points to check'}</div>
+        ${cs.map(c=>`<div class="v-crow v-crow--${c.sev}"><span class="v-cdot" aria-hidden="true"></span><div class="v-cbody"><b>${escapeHtml(c.t)}</b><span>${escapeHtml(c.d)}</span></div></div>`).join('')}</div>`
+    : `<div class="v-clean"><b>Reads clean so far.</b> No high sugar, bad fats, sodium or additive flags in what we could read — still worth a glance at the physical pack.</div>`;
+  return `<div class="verdict"><div class="v-lead">${lead}</div>${concerns}</div>`;
 }
 
-/* Composition bento — tiles sized by how much of each is in the pack.
-   The biggest "volume" (relative to an everyday reference) dominates the grid. */
-function bentoHtml(data){
-  const {sugarG,basisAmt,unit,energy}=readNums(data);
-  const adds=[...new Map(ingList(data).flatMap(decodeItem).map(d=>[d.name,d])).values()];
-  const tiles=[];
-  if(sugarG!=null){const t=Math.round(sugarG/4*10)/10;tiles.push({v:t,u:`tsp · ${sugarG} g`,l:`sugar / ${basisAmt}${unit}`,cls:'b-sugar',fill:Math.min(1,t/6)})}
-  if(energy!=null)tiles.push({v:energy,u:`kcal / ${basisAmt}${unit}`,l:'energy',fill:Math.min(1,energy/500)});
-  if(data.protein_g!=null)tiles.push({v:data.protein_g,u:`g / ${basisAmt}${unit}`,l:'protein',fill:Math.min(1,+data.protein_g/20)});
-  if(adds.length)tiles.push({v:adds.length,u:adds.length===1?'additive decoded':'additives decoded',l:'from the ingredient list',cls:'b-warn',fill:Math.min(1,adds.length/8),chips:adds.slice(0,4).map(d=>d.name)});
-  if(!tiles.length)return '';
-  tiles.sort((a,b)=>b.fill-a.fill);  // volume-based prominence
-  return `<div class="bento">${tiles.map((t,i)=>`<div class="b ${t.cls||''} ${i===0?'b-lg':''}">
-      <div class="bl">${escapeHtml(t.l)}</div>
-      <div><span class="bn">${t.v}</span> <span class="bu">${escapeHtml(t.u)}</span></div>
-      ${t.chips?`<div class="b-chips">${t.chips.map(c=>`<span class="watch-item">${escapeHtml(c)}</span>`).join('')}</div>`:`<div class="b-fill"><i style="width:${Math.round(t.fill*100)}%"></i></div>`}
-    </div>`).join('')}</div>
-    <p class="report-meta">Tiles are sized by how much of each is present — the biggest block is what dominates this pack. Bars run against everyday reference points (6 tsp sugar, 500 kcal, 20 g protein), not a health verdict.</p>`;
+/* Nutrient reference points (adult, general guidance). dv = amount for a whole
+   day; `limit` nutrients are judged on how much of that day ONE portion uses. */
+const NUTRIENTS=[
+  {key:'energy', l:'Energy',        u:'kcal', dv:2000, get:n=>n.energy},
+  {key:'carb',   l:'Carbohydrate',  u:'g',    dv:300,  get:n=>n.carb},
+  {key:'sugar',  l:'Sugar',         u:'g',    dv:25,   get:n=>n.sugarG,  limit:true, why:'added sugars — calories with no fibre to slow them'},
+  {key:'fiber',  l:'Fibre',         u:'g',    dv:28,   get:n=>n.fiber,   good:true},
+  {key:'protein',l:'Protein',       u:'g',    dv:50,   get:n=>n.protein, good:true},
+  {key:'fat',    l:'Total fat',     u:'g',    dv:70,   get:n=>n.totFat,  limit:true, why:'energy-dense'},
+  {key:'satfat', l:'Saturated fat', u:'g',    dv:20,   get:n=>n.satFat,  limit:true, why:'raises LDL ("bad") cholesterol'},
+  {key:'trans',  l:'Trans fat',     u:'g',    dv:2,    get:n=>n.transFat,limit:true, why:'no safe level, best avoided', floor:0.1},
+  {key:'sodium', l:'Sodium',        u:'mg',   dv:2000, get:n=>n.sodiumMg,limit:true, why:'raises blood pressure'},
+];
+
+// Work out the amount actually eaten, so warnings reflect exposure not concentration.
+// Prefer the label's serving size; else the whole pack (single-serve assumption);
+// else fall back to the per-100 basis and say we couldn't size a portion.
+function servingAmt(data){
+  const ms=[...String(data.serving_size||'').matchAll(/(\d+(?:\.\d+)?)\s*(g|ml|kg|l)\b/ig)];
+  if(!ms.length)return null;
+  const m=ms[ms.length-1];let v=parseFloat(m[1]);const u=m[2].toLowerCase();
+  if(u==='kg'||u==='l')v*=1000;return v;
+}
+function resolvePortion(data){
+  const n=readNums(data),sg=servingAmt(data);
+  if(/serv/i.test(String(data.nutrition_basis||'')))return {factor:1,label:`per serving`+(sg?` (${sg} ${n.unit})`:''),sized:true};
+  if(sg!=null)return {factor:sg/n.basisAmt,label:`per serving (${sg} ${n.unit})`,sized:true};
+  if(n.packAmt!=null)return {factor:n.packAmt/n.basisAmt,label:`the whole ${n.packAmt} ${n.unit} pack`,sized:true,pack:true};
+  return {factor:null,label:`per ${n.basisAmt} ${n.unit}`,sized:false};
+}
+const fmtN=v=>Math.round(v*10)/10;
+// One source of truth: per-nutrient value scaled to the portion, its %DV and severity.
+function nutrientReadout(data){
+  const n=readNums(data),p=resolvePortion(data);
+  const rows=NUTRIENTS.map(r=>{
+    const basisV=r.get(n);if(basisV==null)return null;
+    const portionV=p.factor!=null?basisV*p.factor:basisV,pct=Math.round(portionV/r.dv*100);
+    let sev=null;
+    if(r.limit)sev=r.floor?(portionV>=r.floor?'high':null):(pct>=20?'high':pct>=10?'watch':null);
+    return {...r,basisV,portionV,pct,sev};
+  }).filter(Boolean);
+  return {n,p,rows};
+}
+
+// Nutrition-at-a-glance grid — portion-scaled value, %DV bar, per-100 reference.
+function nutrientGridHtml(data){
+  const {n,p,rows}=nutrientReadout(data);
+  if(!rows.length)return '';
+  return `<div class="nutgrid">${rows.map(r=>{
+    const cls=r.good?(r.pct>=20?'nut--good':''):(r.sev==='high'?'nut--hi':r.sev==='watch'?'nut--mid':''),
+      tag=r.sev==='high'?'<span class="nut-tag">high</span>':(r.good&&r.pct>=20?'<span class="nut-tag nut-tag--ok">good source</span>':''),
+      ref=(p.factor!=null&&p.factor!==1)?` · ${fmtN(r.basisV)} ${r.u} per ${n.basisAmt}${n.unit}`:'';
+    return `<div class="nut ${cls}">
+      <div class="nut-h"><span class="nut-l">${escapeHtml(r.l)}</span>${tag}</div>
+      <div class="nut-v">${fmtN(r.portionV)}<span>${r.u}</span></div>
+      <div class="nut-bar"><i style="width:${Math.min(100,Math.max(0,r.pct))}%"></i></div>
+      <div class="nut-dv">${r.pct}% of daily${escapeHtml(ref)}</div>
+    </div>`;
+  }).join('')}</div>
+  <p class="report-meta">Sized to <b>${escapeHtml(p.label)}</b>${p.pack?' — no serving size on the label, so this assumes the whole pack in one sitting.':p.sized?'':' — no serving or pack size found, so these are the label\'s per-100 figures, not a portion.'} Bars are % of an adult daily reference (energy 2000 kcal · sugar 25 g · sat fat 20 g · sodium 2000 mg) — a rough scale, not a personal target or a health verdict.</p>`;
+}
+
+// Concerns engine — the "why", named, judged on the portion actually eaten.
+function concernList(data){
+  const {p,rows}=nutrientReadout(data),out=[],t=fullText(data);
+  rows.filter(r=>r.sev).sort((a,b)=>(b.sev==='high')-(a.sev==='high')).forEach(r=>{
+    const amt=r.u==='mg'?`${Math.round(r.portionV)} mg`:`${fmtN(r.portionV)} g`,
+      tsps=r.key==='sugar'?` ≈ ${tsp(r.portionV)} tsp`:'',
+      title=r.sev==='high'?(r.key==='trans'?'Trans fat':`High ${r.l.toLowerCase()}`):r.l;
+    out.push({t:title,d:`${amt}${tsps} in ${p.label} · ${r.pct}% of the daily reference — ${r.why}`,sev:r.sev});
+  });
+  if(/\bcaffeine\b/i.test(t))out.push({t:'Caffeine',d:'a stimulant — limit for children, in pregnancy, or if you are sensitive',sev:'watch'});
+  const hits=flagHits(data);
+  Object.keys(hits).sort((a,b)=>(EXPLAIN[b]?.risk||0)-(EXPLAIN[a]?.risk||0)).forEach(l=>{
+    if(l==='Caffeine')return;
+    const items=[...new Set(hits[l])].slice(0,3).map(shorten).join(', ');
+    out.push({t:l,d:items+(hits[l].length>3?', …':''),sev:(EXPLAIN[l]?.risk||0)>=2?'high':'watch'});
+  });
+  return out;
 }
 
 /* ---- render OCR scan: verdict first, evidence below ---- */
 function renderScan(data){
   if(data.status!=='complete'){showScanFeedback(data.feedback||['OCR is unavailable.'],'Photo received');return}
-  const caps=data.captured||[];
-  const name=data.product||(findField(caps,'brand','product name','product')||{}).value||'Your label';
-  const list=(arr,fb)=>arr&&arr.length?`<ul class="plainlist">${arr.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>`:`<p class="report-meta">${fb}</p>`;
-  const fresh=freshnessHtml(data);
   detail.innerHTML=`
-    <div class="report-head"><div class="report-kicker">Label scan · from your photo</div><h2>${escapeHtml(name)}</h2><div class="brand-line">Decision view, read straight off the pack.</div></div>
+    <div class="report-head"><div class="report-kicker">Label scan · from your photo</div><h2>What's inside</h2><div class="brand-line">Read straight off the pack — your photo is processed once and never stored.</div></div>
     ${scanVerdict(data)}
-    ${bentoHtml(data)?`<div class="panel"><div class="section-label">Composition at a glance</div>${bentoHtml(data)}</div>`:''}
+    ${nutrientGridHtml(data)?`<div class="panel"><div class="section-label">Nutrition at a glance</div>${nutrientGridHtml(data)}</div>`:''}
     <div class="panel"><div class="section-label">What to watch — flagged ingredients</div>${explainHtml(data)}</div>
-    <div class="panel"><div class="section-label">Read the back — ingredients, decoded</div><div class="ingredients"><p class="report-meta">Listed most-first. Additive codes are spelled out; flags are prompts to check, not safety verdicts.</p>${scanIngredients(data)}</div></div>
+    <div class="panel"><div class="section-label">Read the back — ingredients, decoded</div><div class="ingredients"><p class="report-meta">Listed most-first (most by weight comes first). Additive codes are spelled out; a marked (•) additive is one of the more-debated ones — worth a double-check, not a safety judgment.</p>${scanIngredients(data)}</div></div>
     <div class="panel"><div class="section-label">The label, clarified</div><p class="report-meta">The pack rebuilt from what we could read — no marketing, just the components.</p>${clarifiedHtml(data)}</div>
     <div class="panel"><div class="section-label">How much before you hit the daily sugar line</div>${truthHtml(data)||'<p class="report-meta">Not enough sugar data in the photo to work this out. Retake with the nutrition panel in focus.</p>'}</div>
     <div class="panel"><div class="section-label">Serving guidance</div>${servingHtml(data)}</div>
-    ${fresh?`<div class="panel"><div class="section-label">Dates &amp; freshness</div>${fresh}</div>`:''}
-    <div class="panel"><div class="section-label">Not visible or unreadable</div>${list(data.missing,'Nothing was marked missing.')}
-      ${data.safety_missing&&data.safety_missing.length?`<div class="safety-missing"><strong>Safety-critical — check on the pack</strong><ul>${data.safety_missing.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul></div>`:''}
+    <div class="panel"><div class="section-label">Food-safety checklist — confirm on the pack</div>
+      <p class="report-meta">Beyond nutrition, these are the things worth checking before you buy or eat — especially dates and allergens, which we can't verify from a photo.</p>
+      ${checklistHtml(data)}
       <details><summary>Show the full text read from the photo</summary><pre>${escapeHtml(data.raw_text||'')}</pre></details>
       <div class="report-meta">This reads only what was in frame; it can misread, can't confirm anything outside the photo, and isn't medical or dietary advice — for health concerns, check with a qualified professional.</div></div>`;
   focusReport();detail.querySelector('.report-nav .hint').textContent='Label scan';
@@ -477,15 +573,18 @@ function renderScan(data){
 function focusReport(){detail.insertAdjacentHTML('afterbegin','<div class="report-nav"><button class="back-search" id="back-search" type="button">← New scan</button><span class="hint">Label report</span></div>');$('#back-search').addEventListener('click',()=>{detail.style.display='none';window.scrollTo({top:0,behavior:'smooth'})})}
 const SCAN_STAGES=['Reading the text…','Decoding the additives…','Working out the sugar…','Putting it together…'];
 function renderLoading(){
+  const cells=Array.from({length:24},(_,i)=>`<i style="animation-delay:${((i%12)+Math.floor(i/12))*70}ms"></i>`).join('');
   detail.innerHTML=`<div class="scanning" role="status" aria-live="polite">
-    <div class="scan-anim"><span class="scan-line"></span><span class="sk sk1"></span><span class="sk sk2"></span><span class="sk sk3"></span><span class="sk sk4"></span></div>
-    <div class="scan-status"><strong id="scan-stat">Reading your label…</strong><p id="scan-sub">Warming up the free AI reader…</p></div>
+    <div class="scan-head"><strong id="scan-stat">Reading your label…</strong><span class="scan-timer" id="scan-elapsed" aria-hidden="true">0.0s</span></div>
+    <div class="pixgrid" aria-hidden="true">${cells}</div>
+    <p id="scan-sub" class="scan-sub">Warming up the free AI reader…</p>
   </div>`;
   detail.style.display='block';detail.scrollIntoView({behavior:'smooth',block:'start'});
 }
 async function scanLabel(file){
   renderLoading();scanFeedback.style.display='none';
   let i=0;const timer=setInterval(()=>{const el=document.getElementById('scan-stat');if(el)el.textContent=SCAN_STAGES[i++%SCAN_STAGES.length]},2200);
+  let secs=0;const clock=setInterval(()=>{secs+=0.1;const el=document.getElementById('scan-elapsed');if(el)el.textContent=secs.toFixed(1)+'s'},100);
   // show a live ETA — the free OCR is a shared 5/min budget, so tell the user the wait up front.
   let eta=0;try{const s=await(await fetch('/api/scan-status')).json();eta=Math.max(0,s.wait_seconds||0)}catch{}
   const base='Reading on a free, open AI model (this is a hackathon build) — it\'s slower than paid infra, so give it up to a minute. Production would be much faster.';
@@ -499,7 +598,7 @@ async function scanLabel(file){
   }catch(e){
     detail.style.display='none';detail.innerHTML='';
     showScanFeedback([e.name==='AbortError'?'That took too long to read — try a tighter crop or better light.':e.message,'Then scan again.'],'Scan unavailable');
-  }finally{clearInterval(timer);clearInterval(cd);clearTimeout(to)}
+  }finally{clearInterval(timer);clearInterval(clock);clearInterval(cd);clearTimeout(to)}
 }
 
 /* ---- camera ---- */
@@ -521,7 +620,18 @@ function clamp(){const r=cropImg.getBoundingClientRect(),min=40;box.w=Math.max(m
 cropStage.addEventListener('pointerdown',e=>{const hd=e.target.dataset.h;if(!hd)return;cropStage.setPointerCapture(e.pointerId);drag={hd,px:e.clientX,py:e.clientY,bx:box.x,by:box.y,bw:box.w,bh:box.h};e.preventDefault()});
 cropStage.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.px,dy=e.clientY-drag.py,hd=drag.hd;if(hd==='move'){box.x=drag.bx+dx;box.y=drag.by+dy}else{if(hd.includes('e'))box.w=drag.bw+dx;if(hd.includes('s'))box.h=drag.bh+dy;if(hd.includes('w')){box.x=drag.bx+dx;box.w=drag.bw-dx}if(hd.includes('n')){box.y=drag.by+dy;box.h=drag.bh-dy}}clamp();layout()});
 cropStage.addEventListener('pointerup',()=>drag=null);cropStage.addEventListener('pointercancel',()=>drag=null);
-function confirmCrop(){const r=cropImg.getBoundingClientRect(),sx=cropImg.naturalWidth/r.width,sy=cropImg.naturalHeight/r.height,c=document.createElement('canvas');c.width=Math.round(box.w*sx);c.height=Math.round(box.h*sy);c.getContext('2d').drawImage(cropImg,box.x*sx,box.y*sy,box.w*sx,box.h*sy,0,0,c.width,c.height);cropDialog.close();c.toBlob(b=>b&&scanLabel(new File([b],'label.jpg',{type:'image/jpeg'})),'image/jpeg',.92)}
+function confirmCrop(){
+  const r=cropImg.getBoundingClientRect(),sx=cropImg.naturalWidth/r.width,sy=cropImg.naturalHeight/r.height,
+    sw=box.w*sx,sh=box.h*sy,
+    // Cap the longest edge — a full 4K crop is a ~1.3 MB payload that makes the
+    // free model take 90 s and time out. 2000 px keeps label text legible for OCR.
+    scale=Math.min(1,2000/Math.max(sw,sh)),
+    c=document.createElement('canvas');
+  c.width=Math.round(sw*scale);c.height=Math.round(sh*scale);
+  c.getContext('2d').drawImage(cropImg,box.x*sx,box.y*sy,sw,sh,0,0,c.width,c.height);
+  cropDialog.close();
+  c.toBlob(b=>b&&scanLabel(new File([b],'label.jpg',{type:'image/jpeg'})),'image/jpeg',.85);
+}
 function retake(){cropDialog.close();lastSource==='camera'?openCamera():scanUpload.click()}
 
 /* ---- wiring ---- */
