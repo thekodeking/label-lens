@@ -198,7 +198,6 @@
     .factcard .ft{min-width:0}
     .factcard .ft b{display:block;font-family:var(--font-display);font-size:var(--text-md);font-weight:600;letter-spacing:-.01em}
     .factcard .ft span{display:block;margin-top:3px;color:var(--color-ink-2);font-size:var(--text-sm);line-height:1.4}
-    .factcard .chip{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:var(--radius-pill);background:var(--color-ink);color:var(--color-paper);font-family:var(--font-mono);font-size:var(--text-xs)}
 
     details{margin-top:var(--space-sm);color:var(--color-ink-2);font-size:var(--text-sm)}
     summary{color:var(--color-ink);font-family:var(--font-mono);font-size:var(--text-xs);cursor:pointer}
@@ -359,20 +358,29 @@ function scanIngredients(data){
     return `<li><span class="ingredient-order">${String(i+1).padStart(2,'0')}</span><span>${escapeHtml(t)}${chips.length?`<span class="ingredient-flags">${chips.join('')}</span>`:''}</span></li>`;
   }).join('')}</ol>`;
 }
+// How much of THIS product hits the day's reference for whatever nutrient is the
+// concern here (sodium, sugar, fat…) — counted in servings/packs the shopper sees.
 function truthHtml(data){
-  const {sugarG,basisAmt,unit,packAmt}=readNums(data);
-  if(sugarG==null||sugarG===0)return '';
-  const perUnit=sugarG/basisAmt,dailyAmt=Math.round(25/perUnit),
-    packSugar=packAmt!=null?sugarG*packAmt/basisAmt:null,
-    packPct=packSugar!=null?Math.round(packSugar/25*100):null,
-    packChip=packPct==null?'':packPct>=100?`1 pack ≈ ${Math.round(packPct/10)/10} days' sugar`:`1 pack ≈ ${packPct}% of a day`;
+  const {n,p,rows,lead}=leadNutrient(data);
+  if(!lead){
+    if(!rows.length)return '<p class="report-meta">Not enough nutrition data in the photo to work this out. Retake with the nutrition panel in focus.</p>';
+    return `<p class="report-meta">Nothing here reaches a daily limit in ${escapeHtml(p.label)} — no single nutrient stands out. Portion size still adds up over a day.</p>`;
+  }
+  const per=lead.portionV;
+  if(!per)return '';
+  const portions=lead.dv/per,
+    portionSize=p.factor!=null?n.basisAmt*p.factor:n.basisAmt,
+    prodAmt=Math.round(portions*portionSize),
+    pRound=portions>=10?Math.round(portions):Math.round(portions*10)/10,
+    noun=p.pack?(pRound===1?'pack':'packs'):p.sized?(pRound===1?'serving':'servings'):`× ${n.basisAmt} ${n.unit}`,
+    dvLbl=lead.u==='mg'?`${Math.round(lead.dv)} mg`:`${lead.dv} g`,
+    qty=p.sized?` — about ${prodAmt} ${n.unit}`:'';
   return `<div class="factcard">
-    <div class="big">${dailyAmt}<span>${unit}</span></div>
-    <div class="ft"><b>of this = a full day's sugar</b>
-      <span>The WHO free-sugar line is ~25 g (6 tsp) a day.</span>
-      ${packChip?`<span class="chip">${packChip}</span>`:''}</div>
+    <div class="big">${pRound}<span>${escapeHtml(String(noun))}</span></div>
+    <div class="ft"><b>of this ≈ a full day's ${escapeHtml(lead.l.toLowerCase())}</b>
+      <span>Adult daily reference is about ${dvLbl}${qty}. ${escapeHtml(cap(lead.why))}.</span></div>
   </div>
-  <p class="report-meta">Reference arithmetic on a public WHO guideline — not a diagnosis.</p>`;
+  <p class="report-meta">Reference arithmetic on public daily guidelines — not a diagnosis.</p>`;
 }
 function servingHtml(data){
   const caps=data.captured||[],sv=data.serving_size||(findField(caps,'serving','directions','how to use','preparation','dosage','recommended')||{}).value;
@@ -450,18 +458,27 @@ function checklistHtml(data){
       <span class="chk-mark" aria-hidden="true">${ok?'✓':'✕'}</span>
       <div class="chk-body"><b>${escapeHtml(l)}</b><span>${ok?'Legible in your photo.':escapeHtml(note)}</span></div>
     </div>`).join('')}</div>
-  <p class="report-meta">${miss?`${miss} of these weren't readable here — `:''}A ✓ only means it was legible in your photo. Always confirm dates and allergens on the physical pack before you rely on them.</p>`;
+  <p class="report-meta">${miss?`We couldn't read ${miss} of these from your photo — that doesn't mean they're missing from the pack, just that they weren't in frame or in focus. `:''}A ✓ means an item was legible here, not that the product is safe. Always confirm dates and allergens on the physical pack before you rely on them.</p>`;
 }
 function scanVerdict(data){
-  const {sugarG,basisAmt,unit,packAmt}=readNums(data),
-    st=tsp(sugarG),packSugar=(sugarG!=null&&packAmt!=null)?sugarG*packAmt/basisAmt:null,pt=tsp(packSugar);
-  const lead=sugarG==null
-    ? `<span class="v-k">Sugar</span><div class="big-num">—</div><p class="v-note">No sugar value was legible in this photo. Retake with the nutrition panel in sharp focus for the reveal.</p>`
-    : `<span class="v-k">Sugar per ${basisAmt} ${unit}</span>
-       <div class="big-num">${sugarG}g <em>≈ ${st} tsp</em></div>
-       <div class="tsp-viz">${spoons(st)}</div>
-       <p class="v-note">${packSugar!=null?`Whole ${packAmt} ${unit} pack: <b>${Math.round(packSugar*10)/10}g sugar ≈ ${pt} tsp</b>.`:'Add the net quantity to the frame for a whole-pack total.'}
-       <span class="ref">Reference: WHO suggests keeping free sugars under ~25 g (6 tsp) a day.</span></p>`;
+  const {n,p,rows,lead:top}=leadNutrient(data);
+  let lead;
+  if(top){
+    const isSugar=top.key==='sugar',uu=top.u==='mg'?'mg':'g',
+      val=top.u==='mg'?Math.round(top.portionV):fmtN(top.portionV),
+      em=isSugar?`≈ ${tsp(top.portionV)} tsp`:`${top.pct}% of a day`,
+      ref=(p.factor!=null&&p.factor!==1)?`<span class="ref">That's ${fmtN(top.basisV)} ${uu} per ${n.basisAmt} ${n.unit} on the label.</span>`:'';
+    lead=`<span class="v-k">${escapeHtml(top.l)} · ${escapeHtml(p.label)}</span>
+       <div class="big-num">${val}${uu} <em>${em}</em></div>
+       ${isSugar?`<div class="tsp-viz">${spoons(tsp(top.portionV))}</div>`:''}
+       <p class="v-note"><b>${top.pct}% of the adult daily reference</b> — ${escapeHtml(top.why)}. ${ref}</p>`;
+  }else if(!rows.length){
+    lead=`<span class="v-k">Nutrition</span><div class="big-num">—</div><p class="v-note">No nutrition numbers were legible in this photo. Retake with the panel in sharp focus.</p>`;
+  }else{
+    lead=`<span class="v-k">Overall · ${escapeHtml(p.label)}</span>
+       <div class="big-num" style="font-size:clamp(1.8rem,7vw,2.6rem)">Looks okay</div>
+       <p class="v-note">Nothing stands out in what we could read — no high sugar, fat, salt or additives for this portion. Still worth a glance at the physical pack.</p>`;
+  }
   const cs=concernList(data);
   const high=cs.filter(c=>c.sev==='high').length;
   const concerns=cs.length
@@ -514,6 +531,14 @@ function nutrientReadout(data){
   }).filter(Boolean);
   return {n,p,rows};
 }
+const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
+// The single most important limit-nutrient to lead with — high first, then by %DV.
+// null when nothing crosses a threshold (product reads okay).
+function leadNutrient(data){
+  const {n,p,rows}=nutrientReadout(data);
+  const lead=rows.filter(r=>r.limit&&r.sev).sort((a,b)=>(b.sev==='high')-(a.sev==='high')||b.pct-a.pct)[0]||null;
+  return {n,p,rows,lead};
+}
 
 // Nutrition-at-a-glance grid — portion-scaled value, %DV bar, per-100 reference.
 function nutrientGridHtml(data){
@@ -562,7 +587,7 @@ function renderScan(data){
     <div class="panel"><div class="section-label">What to watch — flagged ingredients</div>${explainHtml(data)}</div>
     <div class="panel"><div class="section-label">Read the back — ingredients, decoded</div><div class="ingredients"><p class="report-meta">Listed most-first (most by weight comes first). Additive codes are spelled out; a marked (•) additive is one of the more-debated ones — worth a double-check, not a safety judgment.</p>${scanIngredients(data)}</div></div>
     <div class="panel"><div class="section-label">The label, clarified</div><p class="report-meta">The pack rebuilt from what we could read — no marketing, just the components.</p>${clarifiedHtml(data)}</div>
-    <div class="panel"><div class="section-label">How much before you hit the daily sugar line</div>${truthHtml(data)||'<p class="report-meta">Not enough sugar data in the photo to work this out. Retake with the nutrition panel in focus.</p>'}</div>
+    <div class="panel"><div class="section-label">How much before you hit the daily ${escapeHtml(leadNutrient(data).lead?leadNutrient(data).lead.l.toLowerCase()+' line':'limit')}</div>${truthHtml(data)}</div>
     <div class="panel"><div class="section-label">Serving guidance</div>${servingHtml(data)}</div>
     <div class="panel"><div class="section-label">Food-safety checklist — confirm on the pack</div>
       <p class="report-meta">Beyond nutrition, these are the things worth checking before you buy or eat — especially dates and allergens, which we can't verify from a photo.</p>

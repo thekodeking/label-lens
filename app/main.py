@@ -563,8 +563,19 @@ async def scan_label(request: FastAPIRequest) -> dict:
     # day and falls through to the next. _ocr_label uses blocking urlopen, so run
     # it off the event loop to keep queued requests responsive.
     tried: set[str] = set()
+    overloaded = False  # some model was busy (503/timeout), not out of daily budget
     while True:
-        model = await _ocr_gate(tried)  # waits for a slot; 503 if every model is spent
+        try:
+            model = await _ocr_gate(tried)  # waits for a slot; 503 if every model is spent
+        except HTTPException:
+            # Every model is excluded. If any dropped out from transient overload
+            # rather than a real 429, say "busy" instead of "daily limit reached".
+            if overloaded:
+                raise HTTPException(
+                    status_code=503,
+                    detail="Our free AI reader is busy right now — please try again in a little while.",
+                ) from None
+            raise
         try:
             return await asyncio.to_thread(_ocr_label, image, content_type, model)
         except _RateLimited:
@@ -576,3 +587,4 @@ async def scan_label(request: FastAPIRequest) -> dict:
             # Transient (503 / timeout): skip for THIS request only, don't mark spent.
             log.warning("model {} overloaded — falling through the chain", model)
             tried.add(model)
+            overloaded = True
