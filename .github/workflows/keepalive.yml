@@ -1,0 +1,12 @@
+name: keepalive
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"  # every 10 min
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -fsS "https://label-lens-gsfp.onrender.com/healthz"

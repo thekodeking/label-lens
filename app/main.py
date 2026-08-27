@@ -228,6 +228,11 @@ def index() -> FileResponse:
     return FileResponse(BASE_DIR / "public/index.html")
 
 
+@app.get("/healthz", include_in_schema=False)
+def healthz() -> dict:
+    return {"ok": True}
+
+
 @app.get("/tokens.css", include_in_schema=False)
 def tokens() -> FileResponse:
     return FileResponse(BASE_DIR / "public/tokens.css", media_type="text/css")

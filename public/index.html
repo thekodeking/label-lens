@@ -207,6 +207,9 @@
     footer{margin-top:var(--space-2xl);padding:var(--space-md) 0 calc(var(--space-lg) + env(safe-area-inset-bottom,0px));border-top:var(--rule-hairline) solid var(--color-rule);color:var(--color-muted);font-family:var(--font-mono);font-size:var(--text-xs);line-height:1.6}
     footer .fk{color:var(--color-ink);font-weight:500}
     footer .fk::after{content:" · "}
+    footer a{color:var(--color-muted);text-decoration:none;border-bottom:var(--rule-hairline) solid var(--color-rule)}
+    footer a:hover{color:var(--color-ink)}
+    footer .dev{display:block;text-align:center;margin-top:var(--space-sm)}
 
     dialog{width:min(560px,calc(100% - 24px));padding:var(--space-md);border:var(--rule-hairline) solid var(--color-rule);border-radius:var(--radius-lg);background:var(--color-paper);color:var(--color-ink)}
     dialog::backdrop{background:var(--color-overlay)}
@@ -269,7 +272,7 @@
     <li><span class="nd" aria-hidden="true"></span>Not medical advice</li>
     <li><span class="nd" aria-hidden="true"></span>Free tier · may queue</li>
   </ul>
-  <footer><span class="fk">Label Lens</span> AI-assisted label reading. Numbers are read off the pack or simple arithmetic — they can misread, and this isn't medical advice.</footer>
+  <footer><span class="fk">Label Lens</span> AI-assisted label reading. Numbers are read off the pack or simple arithmetic — they can misread, and this isn't medical advice.<span class="dev">Developed by <a href="https://github.com/thekodeking" target="_blank" rel="noopener">thekodeking</a></span></footer>
 
   <dialog id="camera-dialog" aria-labelledby="camera-title">
     <div class="dlg-head"><strong id="camera-title">Frame the label</strong><button class="x" id="camera-close" type="button" aria-label="Close">✕</button></div>
